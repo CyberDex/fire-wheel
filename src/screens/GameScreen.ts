@@ -3,7 +3,6 @@ import { SmallIconButton } from '../components/SmallIconButton';
 import { game, SceneData } from '../Game';
 import { TitleScreen } from './TitleScreen';
 import { Windows } from '../config/windows';
-import { InfoWindow } from '../components/windows/InfoWindow';
 import { FireGame } from '../games/FireGame';
 import { IGame } from '../games/IGame';
 import { Text } from '@pixi/text';
@@ -23,7 +22,7 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
     private resumeButton!: Button;
     private paused = false;
 
-    constructor(options?: SceneData) { // constructor accepts an object with data that will be passed to the screen when it is shown
+    constructor() { // constructor accepts an object with data that will be passed to the screen when it is shown
         super('GameScreen'); // Creates Layout with id 'GameScreen'
 
         game.addBG(); 
@@ -35,26 +34,9 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
         
         this.addResumeButton(); // add resume button component to the screen
 
-        this.createWindows(options?.window); // create windows
-
         this.addInfo();
 
         this.addEvents();
-    }
-
-    /** Create windows. 
-     * Windows are Layout based components that are shown on top of the screen.
-    */
-    private createWindows(
-        activeWindow?: Windows // active window to show
-        ) { 
-        this.addWindow(Windows.info, new InfoWindow(this.views, `
-                TODO: add description here
-            `)); // create InfoWindow
-
-            this.addInfoButton(); // add info button component to the screen
-
-            this.showActiveWindow(activeWindow); // show active window
     }
 
     /** Add pause button component to the screen.
@@ -62,12 +44,7 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
      */
     private addBackButton() {
         const button = new SmallIconButton('HomeIcon', () => { // create a button with a custom icon
-            game.showScreen( // show TitleScreen with default window (pauseWindow) opened
-                TitleScreen, // screen to show
-                {
-                    window: Windows.pause // show screen with PauseWindow opened
-                }
-            ); 
+            game.showScreen(TitleScreen); 
 
             game.bg.resetFilter();
             game.bg.pause();

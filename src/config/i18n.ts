@@ -6,16 +6,9 @@ export default {
         poweredBy: "POWERED BY",
     },
     titleScreen: {
-        info: {
-            title: "INFO",
-            accept: "OK",
-        },
         menu: {
-            title: "MENU",
-            items: {
-                play: "PLAY",
-                repo: "Code on GitHub",
-            }
+            play: "PLAY",
+            repo: "Code on GitHub",
         },
     },
     gameScreen: {

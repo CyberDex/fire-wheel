@@ -1,7 +1,10 @@
 import { AppScreen } from '../components/basic/AppScreen';
-import { PauseWindow } from '../components/windows/PauseWindow';
 import { Windows } from '../config/windows';
-import { game, SceneData } from '../Game';
+import { game } from '../Game';
+import { GameScreen } from './GameScreen';
+import { gitHubURL } from '../config';
+import { Button } from '../components/basic/Button';
+import i18n from '../config/i18n';
 
 /** Title screen. 
  * To be used to show when game is on pause or before the game starts.
@@ -11,22 +14,53 @@ export class TitleScreen extends AppScreen { // extends AppScreen that extends L
     
     override defaultWindow = Windows.pause; // default window to show
 
-    constructor(options?: SceneData) {
+    constructor() {
         super('TitleScreen'); // Creates Layout with id 'TitleScreen'
         
         game.addBG(); 
 
-        this.createWindows(options?.window); // create windows
-    }
+        const startButton = new Button( // create a levels window navigational button
+            i18n.titleScreen.menu.play, // button text
+            () => {
+                game.showScreen(GameScreen);
+            }
+        );
 
-    /** Create windows. 
-     * Windows are Layout based components that are shown on top of the screen.
-    */
-    private createWindows(
-        activeWindow?: Windows // active window to show
-        ) { 
-        this.addWindow(Windows.pause, new PauseWindow()); // create PauseWindow
+        const githubButton = new Button( // create a levels window navigational button
+            i18n.titleScreen.menu.repo, // button text
+            () => {
+                (window as any).open(gitHubURL, '_blank').focus();
+            }
+        );
 
-        this.showActiveWindow(activeWindow); // show active window
+        this.addContent({ // add the buttons to the window layout system
+            menu: { // menu is the id of the layout
+                content: {
+                    startButton: {
+                        content: startButton,
+                        styles: {
+                            position: 'center',
+                            paddingLeft: 90,
+                            maxWidth: '100%'
+                        }
+                    },
+                    githubButton: {
+                        content: githubButton,
+                        styles: {
+                            position: 'centerBottom',
+                            paddingLeft: 90,
+                            maxWidth: '40%',
+                            maxHeight: '10%',
+                            marginBottom: 20
+                        }
+                    }
+                },
+                styles: { // styles is an object with all the styles that will be applied Sto the layout
+                    position: 'bottom', // center the layout in the middle of the parent
+                    width: '100%',
+                    height: '100%',
+                }
+            }
+        });
     }
 }
