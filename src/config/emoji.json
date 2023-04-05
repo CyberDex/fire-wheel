@@ -1,0 +1,307 @@
+{
+	"frames": {
+		"emoji1": {
+			"frame": {
+				"x": 152,
+				"y": 5,
+				"w": 132,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 132,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji2": {
+			"frame": {
+				"x": 293,
+				"y": 285,
+				"w": 134,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 134,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji3": {
+			"frame": {
+				"x": 142,
+				"y": 425,
+				"w": 134,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 134,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji4": {
+			"frame": {
+				"x": 5,
+				"y": 280,
+				"w": 132,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 132,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji5": {
+			"frame": {
+				"x": 5,
+				"y": 420,
+				"w": 132,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 132,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji6": {
+			"frame": {
+				"x": 142,
+				"y": 565,
+				"w": 132,
+				"h": 140
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 132,
+				"h": 140
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji7": {
+			"frame": {
+				"x": 281,
+				"y": 425,
+				"w": 132,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 132,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji8": {
+			"frame": {
+				"x": 5,
+				"y": 560,
+				"w": 132,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 132,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji9": {
+			"frame": {
+				"x": 279,
+				"y": 565,
+				"w": 140,
+				"h": 145
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 140,
+				"h": 145
+			},
+			"sourceSize": {
+				"w": 144,
+				"h": 144
+			}
+		},
+		"emoji10": {
+			"frame": {
+				"x": 289,
+				"y": 5,
+				"w": 138,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 138,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji11": {
+			"frame": {
+				"x": 5,
+				"y": 140,
+				"w": 132,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 132,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji12": {
+			"frame": {
+				"x": 5,
+				"y": 5,
+				"w": 142,
+				"h": 130
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 142,
+				"h": 130
+			},
+			"sourceSize": {
+				"w": 142,
+				"h": 129
+			}
+		},
+		"emoji13": {
+			"frame": {
+				"x": 142,
+				"y": 145,
+				"w": 136,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 136,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		},
+		"emoji14": {
+			"frame": {
+				"x": 142,
+				"y": 285,
+				"w": 146,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 5,
+				"w": 146,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 146,
+				"h": 146
+			}
+		},
+		"emoji15": {
+			"frame": {
+				"x": 283,
+				"y": 145,
+				"w": 132,
+				"h": 135
+			},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {
+				"x": 2,
+				"y": 0,
+				"w": 132,
+				"h": 135
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 137
+			}
+		}
+	},
+	"meta": {
+		"scale": "1"
+	}
+}

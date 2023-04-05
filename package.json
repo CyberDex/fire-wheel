@@ -1,0 +1,46 @@
+{
+    "name": "pixijs-game-ui",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "A simple PixiJS game UI project.",
+    "author": {
+        "name": "CyberDex",
+        "url": "https://github.com/CyberDex"
+    },
+    "scripts": {
+        "start": "vite --open --host",
+        "build": "tsc && vite build",
+        "preview": "npm run build && vite preview --open",
+        "lint": "eslint --ext .js,.ts,.tsx src",
+        "lint:fix": "eslint --ext .js,.ts,.tsx src --fix",
+        "format": "prettier --write src/**/*.{ts}"
+    },
+    "dependencies": {
+        "@pixi/app": "^7.2.3",
+        "@pixi/assets": "^7.2.3",
+        "@pixi/core": "^7.2.3",
+        "@pixi/display": "^7.2.3",
+        "@pixi/events": "^7.2.3",
+        "@pixi/filter-motion-blur": "^5.1.1",
+        "@pixi/graphics": "^7.2.3",
+        "@pixi/layout": "^0.1.6",
+        "@pixi/particle-emitter": "^5.0.8",
+        "@pixi/sprite": "^7.2.3",
+        "@pixi/sprite-tiling": "^7.2.3",
+        "@pixi/spritesheet": "^7.2.3",
+        "@pixi/text": "^7.2.3",
+        "@pixi/text-bitmap": "^7.2.3",
+        "@pixi/ui": "^0.7.0",
+        "gsap": "^3.11.4",
+        "i": "^0.3.7",
+        "typed-signals": "^2.5.0",
+        "gamestats.js": "^1.0.4"
+    },
+    "devDependencies": {
+        "eslint": "^8.32.0",
+        "eslint-plugin-simple-import-sort": "^10.0.0",
+        "prettier": "^2.8.3",
+        "typescript": "^4.9.3",
+        "vite": "^4.0.0"
+    }
+}
