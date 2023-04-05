@@ -1,14 +1,10 @@
 import { FancyButton } from "@pixi/ui";
-import { Counter } from "./basic/Counter";
 
 /** Config is applied to a FancyButton, so it can be used without setting a config. */
 export class SmallIconButton extends FancyButton {
-    counter!: Counter; // counter component that will be added to the button. It will show the number of notifications
-    
     constructor(
         icon: string, // icon for the button
         onclick: () => void, // callback for the button press
-        notifications = 0 // number of notifications to show on the button
         ) {
         super({ // create the FancyButton component
             defaultView: `SmallButton-disabled`, // this is a key to the texture atlas for default button state view
@@ -38,20 +34,7 @@ export class SmallIconButton extends FancyButton {
         });
 
         this.onPress.connect(onclick); // connect button press event to the provided callback
-
-        if (notifications) { // if there are notifications to show
-            this.counter = new Counter(notifications); // create the counter component
-
-            this.counter.x = this.width / 2 - 20; // set the counter position
-            this.counter.y = -this.height / 2 + 20; // set the counter position
-
-            this.innerView.addChild(this.counter as any); // add the counter to the button
-        }
         
         this.anchor.set(0.5); // set button anchor to the center, this is needed for the button to scale correctly when animated
-    }
-
-    set notifications(amount: number) { // set the number of notifications
-        this.counter.number.text = String(amount); // set the text of the counter
     }
 };

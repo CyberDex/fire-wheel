@@ -31,7 +31,7 @@ export class LoadingSpinner extends Layout {
                         color: colors.text, // color of the text
                         marginTop: 100, // set margin top to 100px
                         fontFamily: 'Days One', // font family of the text
-                        fontSize: 16, // font size of the text
+                        fontSize: 14, // font size of the text
                     }
                 }
             },

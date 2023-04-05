@@ -1,12 +1,10 @@
 import { AppScreen } from "../components/basic/AppScreen";
 import { IGame } from "./IGame";
 import { GameBase } from "./GameBase";
-import { Quality, fireConfig, getQualityData } from "../config/fireGameConfig";
-import { Assets } from "@pixi/assets";
+import { Quality, fireConfig, getQualityData } from "../config/fireConfig";
 import { TilingSprite } from "@pixi/sprite-tiling";
 import { Texture } from "@pixi/core";
 import { app } from "../main"
-import { gsap } from "gsap";
 import { Emitter } from '@pixi/particle-emitter';
 import { game } from "../Game";
 
@@ -14,7 +12,6 @@ export class FireGame extends GameBase implements IGame {
     private tintTexture!: Texture;
     private fireEmitter!: Emitter;
     private elapsed: number = 0;
-    private tint!: TilingSprite;
     private quality: Quality = 'low';
     private safeQuality!: Quality;
     private widthCache!: number;
@@ -35,34 +32,12 @@ export class FireGame extends GameBase implements IGame {
     }
 
     async init() {
-        await Assets.loadBundle('fire');
-
-        this.addViews();
-
         this.start();
-    }
-
-    private addViews() { 
-        this.tintTexture = Texture.from('fireGradient');
-
-        this.tint = new TilingSprite(this.tintTexture, 1, window.innerHeight);
-        this.tint.width = window.innerWidth;
-        this.tint.height = window.innerHeight;
-        this.tint.x = 0;
-        this.tint.y = -window.innerHeight;
-        this.tint.visible = false;
-
-        this.tint.tileScale.set(window.innerHeight / this.tintTexture.height);
-        
-        this.addChildAt(this.tint, 0);
     }
 
     private bern() { 
         if (this.fireEmitter) {
             this.fireEmitter.destroy();
-            this.tint.visible = false;
-
-            game.bg.resetFilter();
         }
 
         this.widthCache = window.innerWidth;
@@ -71,9 +46,6 @@ export class FireGame extends GameBase implements IGame {
             this,
             fireConfig(this.widthCache, this.quality)
         );
-
-        this.tint.visible = true;
-        this.tint.alpha = 0;
 
         let velocity = 0;
         let kernelSize = 0;
@@ -90,15 +62,7 @@ export class FireGame extends GameBase implements IGame {
             if (kernelSize < 15) {
                 kernelSize++;
             }
-            
-            game.bg.filter.velocity.set(velocity);
-            game.bg.filter.kernelSize = kernelSize;
         }, 100);
-
-        gsap.to(this.tint, {
-            alpha: 1,
-            duration: 2,
-        });
 
         this.elapsed = Date.now();
         this.fireEmitter.emit = true;
@@ -202,15 +166,6 @@ export class FireGame extends GameBase implements IGame {
     resize(_width: number, height: number): void {
         this.x = 0;
         this.y = height;
-
-        if (this.tint) {
-            this.tint.width = window.innerWidth;
-            this.tint.height = window.innerHeight;
-            this.tint.x = 0;
-            this.tint.y = -window.innerHeight;
-
-            this.tint.tileScale.set(window.innerHeight / this.tintTexture.height);
-        }
 
         if (this.fireEmitter && this.widthCache < window.innerWidth) {
             this.bern();

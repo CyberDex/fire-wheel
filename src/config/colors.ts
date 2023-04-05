@@ -1,5 +1,5 @@
 export const colors = {
-    bg: 0x66c1da,
+    bg: 0x000000,
     text: 0xFFFFFF,
     defaultStroke: 0x82C822,
     hoverStroke: 0xD49800,
