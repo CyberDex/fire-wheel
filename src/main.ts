@@ -29,23 +29,12 @@ stats.dom.id = 'gamestats';
 (stats as any).enableExtension('pixi', [PIXI, app]);
 
 app.ticker.add(() => {
-
 	stats.begin();
-	// game update goes here
-
 	stats.begin('physics');
-	// the graph will deterministically assign a color based on the label
-	// physics();
 	stats.end('physics')
-
 	stats.begin('render', '#6cc644')
-	// optional second color parameter
-	// render();
 	stats.end('render')
-
 	stats.end();
-
-	// requestAnimationFrame( animate );
 });
 
 
