@@ -11,7 +11,7 @@ export class SmallIconButton extends FancyButton {
         notifications = 0 // number of notifications to show on the button
         ) {
         super({ // create the FancyButton component
-            defaultView: `SmallButton`, // this is a key to the texture atlas for default button state view
+            defaultView: `SmallButton-disabled`, // this is a key to the texture atlas for default button state view
             hoverView: `SmallButton-hover`, // this is a key to the texture atlas for hover button state view
             pressedView: `SmallButton-pressed`, // this is a key to the texture atlas for pressed button state view
             disabledView: `SmallButton-disabled`, // this is a key to the texture atlas for disabled button state view

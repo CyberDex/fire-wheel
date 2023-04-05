@@ -7,7 +7,7 @@ import { colors } from "../../config/colors";
 export class Button extends Layout {
     constructor(text: string, onclick: () => void, styles?: any) {
         const button = new FancyButton({ // create a button
-            defaultView: `Button`, // this is a key to the texture atlas for default button state view
+            defaultView: `Button-disabled`, // this is a key to the texture atlas for default button state view
             hoverView: `Button-hover`, // this is a key to the texture atlas for hover button state view
             pressedView: `Button-pressed`, // this is a key to the texture atlas for pressed button state view
             disabledView: `Button-disabled`, // this is a key to the texture atlas for disabled button state view

@@ -44,7 +44,7 @@ export const assetsManifest: ResolverManifest = {
                 },
                 {
                     name: 'bg',
-                    srcs: 'assets/Examples/BG.png',
+                    srcs: 'assets/bg.jpg',
                 },
                 {
                     name:'SmallButton-disabled', 
