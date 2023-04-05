@@ -42,7 +42,7 @@ export class PauseWindow extends BasicWindow {
                         () => this.selectMenuItem(gameType as GameTypes), // button click callback
                     ), // content is the button component
                 styles: { // styles is an object with all the styles that will be applied to the button
-                    marginTop: 10, // move the button 10px down from the neighbour buttons
+                    marginTop: 100, // move the button 10px down from the neighbour buttons
                 }
             };
         }
@@ -50,7 +50,7 @@ export class PauseWindow extends BasicWindow {
         this.addContent({ // add the buttons to the window layout system
             menu: { // menu is the id of the layout
                 content: menuButtons, // content is an array of all the components that will be added to the layoutSystem
-                styles: { // styles is an object with all the styles that will be applied to the layout
+                styles: { // styles is an object with all the styles that will be applied Sto the layout
                     position: 'centerTop', // center the layout in the middle of the parent
                     marginTop: 120, // move the layout 120px down from the top of the parent
                     width: '66%', // set width to 66% of parent, so children will be able to use 66% of the screen width

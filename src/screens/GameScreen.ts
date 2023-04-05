@@ -4,9 +4,6 @@ import { game, SceneData } from '../Game';
 import { TitleScreen } from './TitleScreen';
 import { Windows } from '../config/windows';
 import { InfoWindow } from '../components/windows/InfoWindow';
-import { challenges } from '../config/challenges';
-import { SpritesGame } from '../games/SpritesGame';
-import { EmojiGame } from '../games/EmojiGame';
 import { FireGame } from '../games/FireGame';
 import { IGame } from '../games/IGame';
 import { Text } from '@pixi/text';
@@ -16,13 +13,12 @@ import { Position } from '@pixi/layout';
 import { Button } from '../components/basic/Button';
 import i18n from '../config/i18n';
 import { gsap } from 'gsap';
-import { getUrlParam } from '../utils/gtUrlParams';
 
-export type GameTypes = 'sprites' | 'emoji' | 'fire';
+export type GameTypes = 'fire';
 
 export class GameScreen extends AppScreen { // GameScreen extends AppScreen, which is a Layout with a few additional features
     public static assetBundles = ['game']; // asset bundles that will be loaded before the screen is shown
-    private gameType: GameTypes = 'sprites'; // game type
+    private gameType: GameTypes = 'fire'; // game type
     private game!: IGame; // game instance
     private resumeButton!: Button;
     private paused = false;
@@ -31,22 +27,17 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
         super('GameScreen'); // Creates Layout with id 'GameScreen'
 
         game.addBG(); 
-        
-        if (getUrlParam('game')) {
-            this.gameType = getUrlParam('game') as GameTypes;
-        }
 
-        if (options?.type) { 
-            this.gameType = options?.type; // set game type
-        }
-
-        this.createGame(); // create game
+        this.game = new FireGame(this);
+        this.game.init();
         
         this.addBackButton(); // add pause button component to the screen
         
         this.addResumeButton(); // add resume button component to the screen
 
         this.createWindows(options?.window); // create windows
+
+        this.addInfo();
 
         this.addEvents();
     }
@@ -57,16 +48,13 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
     private createWindows(
         activeWindow?: Windows // active window to show
         ) { 
-
-        const task = challenges[this.gameType];
-
-        if (task) {
-            this.addWindow(Windows.info, new InfoWindow(this.views, task)); // create InfoWindow
+        this.addWindow(Windows.info, new InfoWindow(this.views, `
+                TODO: add description here
+            `)); // create InfoWindow
 
             this.addInfoButton(); // add info button component to the screen
 
             this.showActiveWindow(activeWindow); // show active window
-        }
     }
 
     /** Add pause button component to the screen.
@@ -162,32 +150,6 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
         });
     }
 
-    /** Create game. */
-    private createGame() {
-        switch (this.gameType) {
-            case 'sprites':
-                this.game = new SpritesGame(this);
-                this.game.init();
-                this.game.onStateChange.connect((prop: string, val: number) => {
-                    if (prop === 'activeItemID') {
-                        const total = this.game.items?.length ?? 0;
-                        const progress = total - val - 1;
-                        this.updateInfo('progress', `${progress} / ${total}`);
-                    }
-                });
-                this.addInfoPanel('progress', 'centerTop');
-            break;
-            case 'emoji':
-                this.game = new EmojiGame(this);
-                this.game.init();
-            break;
-            case 'fire':
-                this.game = new FireGame(this);
-                this.game.init();
-                break;
-        }
-    }
-
     private addInfoPanel(id: string, position: Position, value?: string) {
         const bg = Sprite.from('ValueBG');
 
@@ -242,6 +204,17 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
             this.game.resize(width, height);
         }
     };
+
+    private addInfo() {
+        this.game.onStateChange.connect((prop: string, val: number) => {
+            if (prop === 'activeItemID') {
+                const total = this.game.items?.length ?? 0;
+                const progress = total - val - 1;
+                this.updateInfo('progress', `${progress} / ${total}`);
+            }
+        });
+        this.addInfoPanel('progress', 'centerTop');
+    }
 
     private addEvents() { 
         window.onfocus = () => this.pause();

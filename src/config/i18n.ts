@@ -13,9 +13,7 @@ export default {
         menu: {
             title: "MENU",
             items: {
-                sprites: "SPRITES",
-                emoji: "TEXT & IMAGES",
-                fire: "PARTICLES FIRE",
+                play: "PLAY",
                 repo: "Code on GitHub",
             }
         },

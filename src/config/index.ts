@@ -1,1 +1,1 @@
-export const gitHubURL = 'https://github.com/CyberDex/pixi-experiments';
+export const gitHubURL = 'https://github.com/CyberDex/fire-wheel';
