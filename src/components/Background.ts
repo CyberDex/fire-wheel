@@ -2,12 +2,14 @@ import { Sprite } from '@pixi/sprite';
 import { Layout } from '@pixi/layout';
 import { PixiLogo } from './PixiLogo';
 import { gsap } from 'gsap';
+import { MotionBlurFilter } from '@pixi/filter-motion-blur';
 
 /* Layout based component for the background.
  * This is where all the layers of the background should be added and controlled. 
  * For example to add a parallax effect, you would add a new layers here and control their positions.
  */
 export class Background extends Layout {
+    filter: MotionBlurFilter;
     bgSprite: Sprite;
     animation: gsap.core.Timeline;
 
@@ -35,9 +37,17 @@ export class Background extends Layout {
 
         this.bgSprite = bg;
 
+        this.filter = new MotionBlurFilter();
+        this.filters = [this.filter];
+
         this.animation = gsap.timeline();
     }
 
+    resetFilter() {
+        this.filter.velocity.set(0);
+        this.filter.kernelSize = 0;
+    }
+    
     pause() {
         this.animation.pause()
     }

@@ -59,6 +59,9 @@ export class FireGame extends GameBase implements IGame {
             if (kernelSize < 15) {
                 kernelSize++;
             }
+
+            game.bg.filter.velocity.set(velocity);
+            game.bg.filter.kernelSize = kernelSize;
         }, 100);
 
         this.elapsed = Date.now();
