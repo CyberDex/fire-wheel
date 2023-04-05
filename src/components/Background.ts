@@ -21,7 +21,7 @@ export class Background extends Layout {
                     content: bg, // content is the PIXI sprite that will be added to the layer
                     styles: { // styles is an object with all the styles that will be applied to the layer
                         position: 'center', // center Layout in the middle of parent
-                        maxHeight: '100%', // set max height to 100% of parent, so it will scale down to fit the screen height
+                        minHeight: '100%', // set max height to 100% of parent, so it will scale down to fit the screen height
                         minWidth: '100%', // set min width to 100% of parent, so it will scale up to fit the screen width
                     }
                 },
