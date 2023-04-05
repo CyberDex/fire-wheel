@@ -1,19 +1,12 @@
 
 import gsap from 'gsap';
 import { Layout, Styles } from '@pixi/layout';
-import { Windows } from '../../config/windows';
-import { ViewController } from '../../controllers/ViewController';
-import { Window } from './Window';
-import { getUrlParam } from '../../utils/gtUrlParams';
 
 /** Layout based component to place screens content. 
  * Should be used as a base class for all screens in the app.
  * Should be added to the app.stage.
  */
 export class AppScreen extends Layout {
-    protected views: ViewController; // view controller, used to manage windows
-    protected defaultWindow!: Windows; // default window to show
-
     constructor(id: string, styles?: Styles) {
         // created blank layout with id and styles, content will be added in the child classes
         super({
@@ -25,8 +18,6 @@ export class AppScreen extends Layout {
                 ...styles, // add styles passed in the constructor
             }
         });
-
-        this.views = new ViewController(); // create view controller
     }
 
     /** Method is automatically called on every update. See Game.ts */
@@ -54,39 +45,5 @@ export class AppScreen extends Layout {
     public async hide() {
         gsap.killTweensOf(this); // kill all tweens of this object
         await gsap.to(this, { alpha: 0, duration: 0.2, ease: 'linear' }); // fade out
-    }
-
-    /** Add window to the view controller and screen. */
-    public addWindow(
-        window: Windows, // window id 
-        content: Window // window content component
-        ) {
-        this.views.add(window, content); // add window to the view controller
-        
-        this.addContent({ // add window to layout system
-            [window]: this.views.get(window) // get window from the view controller and add it to layout system
-        });
-    }
-
-    /** Show active window. */
-    public async showActiveWindow(
-        activeWindow?: Windows // window id to show
-        ) { 
-        const window = getUrlParam('window'); // get window param from url, used for debugging (TODO: remove this on production)
-        
-        // If window param is set, try to show it. If it fails, show default window.
-        if (window) {
-            try {
-                await this.views.show(Windows[window as keyof typeof Windows]); // try to show window
-                return;
-            } catch (e) { // if window is not found, show message in console
-                const error: Error = e as Error; // cast error to Error type
-                console.error(error.message.replace('"undefined"', window)); // show error message
-            }
-        }
-
-        if (activeWindow || this.defaultWindow) {
-            await this.views.show(activeWindow ?? this.defaultWindow); // show active window or default window
-        }
     }
 }

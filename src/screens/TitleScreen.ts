@@ -1,9 +1,8 @@
-import { AppScreen } from '../components/basic/AppScreen';
-import { Windows } from '../config/windows';
+import { AppScreen } from '../components/AppScreen';
 import { game } from '../Game';
 import { GameScreen } from './GameScreen';
 import { gitHubURL } from '../config';
-import { Button } from '../components/basic/Button';
+import { Button } from '../components/Button';
 import i18n from '../config/i18n';
 
 /** Title screen. 
@@ -11,8 +10,6 @@ import i18n from '../config/i18n';
 */
 export class TitleScreen extends AppScreen { // extends AppScreen that extends Layout that extends PIXI.Container
     public static assetBundles = ['game']; // set section of assets to preload for this screen. Section is defined in assets.json. Handled by AssetLoader.
-    
-    override defaultWindow = Windows.pause; // default window to show
 
     constructor() {
         super('TitleScreen'); // Creates Layout with id 'TitleScreen'

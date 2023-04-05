@@ -1,14 +1,10 @@
-import { AppScreen } from '../components/basic/AppScreen';
+import { AppScreen } from '../components/AppScreen';
 import { SmallIconButton } from '../components/SmallIconButton';
 import { game } from '../Game';
 import { TitleScreen } from './TitleScreen';
 import { FireGame } from '../games/FireGame';
 import { IGame } from '../games/IGame';
-import { Text } from '@pixi/text';
-import { Sprite } from '@pixi/sprite';
-import { colors } from '../config/colors';
-import { Position } from '@pixi/layout';
-import { Button } from '../components/basic/Button';
+import { Button } from '../components/Button';
 import i18n from '../config/i18n';
 import { gsap } from 'gsap';
 

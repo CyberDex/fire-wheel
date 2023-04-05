@@ -1,7 +1,7 @@
 import { Assets } from '@pixi/assets';
 import { app } from './main';
-import { AppScreen } from './components/basic/AppScreen';
-import { Background } from './components/basic/Background';
+import { AppScreen } from './components/AppScreen';
+import { Background } from './components/Background';
 import { areBundlesLoaded } from './utils/preload';
 import { GameTypes } from './screens/GameScreen';
 

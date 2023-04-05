@@ -1,6 +1,6 @@
 import { Sprite } from '@pixi/sprite';
 import { Layout } from '@pixi/layout';
-import { PixiLogo } from '../PixiLogo';
+import { PixiLogo } from './PixiLogo';
 import { gsap } from 'gsap';
 
 /* Layout based component for the background.

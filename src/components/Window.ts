@@ -1,6 +1,6 @@
 import { Sprite } from '@pixi/sprite';
 import gsap, {Back} from 'gsap';
-import { colors } from '../../config/colors';
+import { colors } from '../config/colors';
 import { Layout, Styles } from '@pixi/layout';
 
 /** Layout base component with the config for a base window class to be extended 

@@ -1,15 +1,12 @@
-import { AppScreen } from "../components/basic/AppScreen";
+import { AppScreen } from "../components/AppScreen";
 import { IGame } from "./IGame";
 import { GameBase } from "./GameBase";
 import { Quality, fireConfig, getQualityData } from "../config/fireConfig";
-import { TilingSprite } from "@pixi/sprite-tiling";
-import { Texture } from "@pixi/core";
 import { app } from "../main"
 import { Emitter } from '@pixi/particle-emitter';
 import { game } from "../Game";
 
 export class FireGame extends GameBase implements IGame {
-    private tintTexture!: Texture;
     private fireEmitter!: Emitter;
     private elapsed: number = 0;
     private quality: Quality = 'low';

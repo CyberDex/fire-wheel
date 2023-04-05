@@ -1,5 +1,5 @@
 
-import { AppScreen } from '../components/basic/AppScreen';
+import { AppScreen } from '../components/AppScreen';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { PixiLogo } from '../components/PixiLogo';
 import { colors } from '../config/colors';

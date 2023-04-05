@@ -1,7 +1,7 @@
 import { Text } from "@pixi/text";
 import { FancyButton } from "@pixi/ui";
 import { Layout } from "@pixi/layout";
-import { colors } from "../../config/colors";
+import { colors } from "../config/colors";
 
 /** Creates a Layout with button as content and apply styles. */
 export class Button extends Layout {
