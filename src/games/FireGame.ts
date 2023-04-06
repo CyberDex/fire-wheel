@@ -10,7 +10,7 @@ export class FireGame extends GameBase implements IGame {
     private fireEmitter!: Emitter;
     private elapsed: number = 0;
     private quality: Quality = 'low';
-    private safeQuality!: Quality;
+    private safeQuality!: Quality | null;
     private widthCache!: number;
     private fps: {
         low: number;
@@ -33,6 +33,8 @@ export class FireGame extends GameBase implements IGame {
     }
 
     private bern() { 
+        this.safeQuality = null;
+
         if (this.fireEmitter) {
             this.fireEmitter.destroy();
         }

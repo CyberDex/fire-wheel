@@ -35,7 +35,7 @@ export const fireConfig = (
         "addAtBack": false,
         "pos": {
             "x": 0,
-            "y": 0
+            "y": 50
         },
         "behaviors": fireBehaviors(width)
     }
@@ -63,8 +63,8 @@ export const fireBehaviors = (width: number) => {
         {
             "type": "moveSpeedStatic",
             "config": {
-                "min": 500,
-                "max": 500
+                "min": 200,
+                "max": 300
             }
         },
         {
@@ -108,8 +108,8 @@ export const fireBehaviors = (width: number) => {
                 "accel": 0,
                 "minSpeed": 50,
                 "maxSpeed": 50,
-                "minStart": 265,
-                "maxStart": 275
+                "minStart": 250,
+                "maxStart": 290
             }
         },
         {
