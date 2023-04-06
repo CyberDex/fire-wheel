@@ -22,6 +22,7 @@ export function getQualityData(quality: Quality): { frequency: number, maxPartic
 
 export const fireConfig = (
     width: number,
+    height: number,
     quality: Quality
 ) => {
     return {
@@ -35,13 +36,13 @@ export const fireConfig = (
         "addAtBack": false,
         "pos": {
             "x": 0,
-            "y": 50
+            "y": 0
         },
-        "behaviors": fireBehaviors(width)
+        "behaviors": fireBehaviors(width, height)
     }
 };
 
-export const fireBehaviors = (width: number) => {
+export const fireBehaviors = (width: number, height: number) => {
     return [
         {
             "type": "alpha",
@@ -126,7 +127,7 @@ export const fireBehaviors = (width: number) => {
                     x: 0,
                     y: 0,
                     w: width,
-                    h: 100,
+                    h: height,
                 }
             }
         }

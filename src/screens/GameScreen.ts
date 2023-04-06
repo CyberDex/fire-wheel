@@ -1,27 +1,41 @@
 import { AppScreen } from '../components/AppScreen';
 import { SmallIconButton } from '../components/SmallIconButton';
-import { game } from '../Game';
+import { app } from '../App';
 import { TitleScreen } from './TitleScreen';
-import { FireGame } from '../games/FireGame';
-import { IGame } from '../games/IGame';
+import { Game } from '../games/Game';
 import { Button } from '../components/Button';
 import i18n from '../config/i18n';
 import { gsap } from 'gsap';
+import { Fire } from '../components/Fire';
+import { Sprite } from '@pixi/sprite';
 
 export class GameScreen extends AppScreen { // GameScreen extends AppScreen, which is a Layout with a few additional features
     public static assetBundles = ['game']; // asset bundles that will be loaded before the screen is shown
-    private game!: IGame; // game instance
+    private game!: Game; // game instance
     private resumeButton!: Button;
     private paused = false;
+    private fire!: Fire;
 
     constructor() { // constructor accepts an object with data that will be passed to the screen when it is shown
         super('GameScreen'); // Creates Layout with id 'GameScreen'
 
-        game.addBG(); 
+        app.addBG(); 
 
-        this.game = new FireGame(this);
-        this.game.init();
+        // this.game = new FireGame(this);
+        // this.game.init();
         
+        const logo = Sprite.from('pixi-logo');
+
+        this.fire = new Fire();
+        this.fire.init(logo);
+
+        this.addContent({
+            content: logo,
+            styles: {
+                position: 'center',
+            }
+        });
+
         this.addBackButton(); // add pause button component to the screen
         
         this.addResumeButton(); // add resume button component to the screen
@@ -34,8 +48,8 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
      */
     private addBackButton() {
         const button = new SmallIconButton('HomeIcon', () => { // create a button with a custom icon
-            game.bg.stopSwing();
-            game.showScreen(TitleScreen); 
+            app.bg.stopSwing();
+            app.showScreen(TitleScreen); 
         });
 
         this.addContent({ // add content to the screen layout
@@ -95,6 +109,8 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
 
     /** Method that is called one every game tick (see Game.ts) */
     onUpdate() {
+        this.fire.update();
+
         if (this.game?.update) {
             this.game.update();
         }
@@ -102,7 +118,7 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
 
     override resize(width: number, height: number) {
         super.resize(width, height);
-
+        
         if (this.game?.resize) {
             this.game.resize(width, height);
         }

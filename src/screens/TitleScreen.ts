@@ -1,5 +1,5 @@
 import { AppScreen } from '../components/AppScreen';
-import { game } from '../Game';
+import { app } from '../App';
 import { GameScreen } from './GameScreen';
 import { gitHubURL } from '../config';
 import { Button } from '../components/Button';
@@ -14,12 +14,12 @@ export class TitleScreen extends AppScreen { // extends AppScreen that extends L
     constructor() {
         super('TitleScreen'); // Creates Layout with id 'TitleScreen'
         
-        game.addBG(); 
+        app.addBG(); 
 
         const startButton = new Button( // create a levels window navigational button
             i18n.titleScreen.menu.play, // button text
             () => {
-                game.showScreen(GameScreen);
+                app.showScreen(GameScreen);
             },
             {
                 fontSize: 60,

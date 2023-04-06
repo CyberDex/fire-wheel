@@ -1,5 +1,5 @@
 import { Assets } from '@pixi/assets';
-import { app } from './main';
+import { pixiApp } from './main';
 import { AppScreen } from './components/AppScreen';
 import { Background } from './components/Background';
 import { areBundlesLoaded } from './utils/preload';
@@ -19,7 +19,7 @@ interface AppScreenConstructor {
  * 
  * It is also a navigation controller of the app.
  **/
-class Game { // We DO NOT export this class, as we want to have only one instance of it, it is exported on the bottom of this file
+class App { // We DO NOT export this class, as we want to have only one instance of it, it is exported on the bottom of this file
     private currentScreen?: AppScreen; // Current screen being displayed
     private currentScreenResize?: () => void; // Resize function to avoid problems with scope
     private loadScreen?: AppScreen; // Default load screen
@@ -41,14 +41,14 @@ class Game { // We DO NOT export this class, as we want to have only one instanc
         this.bg = new Background(); // Create a new instance of the background layout
 
         this.bg.resize(this._w, this._h); // Resize background as it is a layout and it needs to know its size in order it's core functionality to work
-        app.stage.addChild(this.bg); // Add background to the stage
-        app.ticker.add(() => this.bg.update());
+        pixiApp.stage.addChild(this.bg); // Add background to the stage
+        pixiApp.ticker.add(() => this.bg.update());
     }
 
     /** Add screen to the stage, link update & resize functions */
     private async addScreen(screen: AppScreen) {
         // Add screen to stage
-        app.stage.addChild(screen); // Add screen to the stage
+        pixiApp.stage.addChild(screen); // Add screen to the stage
 
         // Add screen's resize handler, if available
         if (screen.resize) {
@@ -57,7 +57,7 @@ class Game { // We DO NOT export this class, as we want to have only one instanc
         }
 
         if (screen.onUpdate) { // Add update function if it exists
-            app.ticker.add(screen.onUpdate, screen); // Add update function to the ticker
+            pixiApp.ticker.add(screen.onUpdate, screen); // Add update function to the ticker
         }
 
         if (screen.show) { // Show the new screen if it has a show method
@@ -76,7 +76,7 @@ class Game { // We DO NOT export this class, as we want to have only one instanc
         }
 
         if (screen.onUpdate) { // Unlink update function if method is available
-            app.ticker.remove(screen.onUpdate, screen); // Remove update function from the ticker
+            pixiApp.ticker.remove(screen.onUpdate, screen); // Remove update function from the ticker
         }
 
         if (screen.parent) { // Remove screen from its parent (usually app.stage, if not changed)
@@ -118,4 +118,4 @@ class Game { // We DO NOT export this class, as we want to have only one instanc
     }
 }
 
-export const game = new Game(); // Export a new instance of the game
+export const app = new App(); // Export a new instance of the game
