@@ -11,7 +11,4 @@ export default {
             repo: "Code on GitHub",
         },
     },
-    gameScreen: {
-        resume: "Resume",
-    }
 }

@@ -12,9 +12,13 @@ export class AppScreen extends Layout {
         super({
             id,
             styles: {
+                aspectRatio: 'flex', // set aspect ratio to flex
+                maxWidth: 1920, // set max width to 1920px
+                minHeight: '100%', // set min height to 100% of parent (app.stage in this case)
                 width: '100%', // set width to 100% of parent (app.stage in this case)
                 height: '100%', // set height to 100% of parent (app.stage in this case)
                 color: 'white', // set text color to white
+                position: 'center', // set position to center
                 ...styles, // add styles passed in the constructor
             }
         });

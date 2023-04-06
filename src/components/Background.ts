@@ -25,15 +25,16 @@ export class Background extends Layout {
                     content: bg, // content is the PIXI sprite that will be added to the layer
                     styles: { // styles is an object with all the styles that will be applied to the layer
                         position: 'center', // center Layout in the middle of parent
-                        minHeight: '100%', // set max height to 100% of parent, so it will scale down to fit the screen height
-                        minWidth: '100%', // set min width to 100% of parent, so it will scale up to fit the screen width
+                        minHeight: '120%', // set max height to 100% of parent, so it will scale down to fit the screen height
+                        maxWidth: '120%', // set min width to 100% of parent, so it will scale up to fit the screen width
                     }
                 },
                 pixiLogo: PixiLogo() // Layout based component for the pixi logo
             },
             styles: {
                 width: '100%', // set width to 100% of parent, so children will be able to use 100% of the screen width
-                height: '100%' // set height to 100% of parent, so children will be able to use 100% of the screen height
+                height: '100%', // set height to 100% of parent, so children will be able to use 100% of the screen height
+                position: 'center', // center Layout in the middle of parent
             }
         });
 

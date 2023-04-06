@@ -28,17 +28,27 @@ export class GameScreen extends AppScreen {
         this.addBottomFire();
 
         this.addBackButton();
-        
-        this.addResumeButton();
+    }
 
+    private addGame() { 
+        this.game = new Game({}).init();
 
-        this.addEvents();
+        this.addContent({
+            content: this.game,
+            styles: {
+                position: 'center',
+                width: wheelConfig.radius * 2,
+                height: wheelConfig.radius * 2,
+                maxWidth: '80%',
+                maxHeight: '80%',
+            }
+        });
     }
 
     private addBottomFire() { 
         const base = new TilingSprite(Texture.EMPTY);
         
-        base.width = app.width;
+        base.width = 1920;
         base.height = 50;
         
         this.fire = new Fire(base);
@@ -46,7 +56,7 @@ export class GameScreen extends AppScreen {
         this.addContent({
             content: base,
             styles: {
-                position: 'bottom',
+                position: 'bottomCenter',
                 marginBottom: -30
             }
         });
@@ -77,64 +87,7 @@ export class GameScreen extends AppScreen {
         });
     }
 
-    private addResumeButton() {
-        this.resumeButton = new Button(
-            i18n.gameScreen.resume,
-            () => {
-                gsap.to(this.resumeButton, {
-                    alpha: 0,
-                    duration: 0.5,
-                    onComplete: () => { 
-                        this.resumeButton.visible = false;
-                        this.resumeButton.scale.set(1);
-                        this.resumeButton.alpha = 1;
-                    }
-                });
-
-                this.game.resume();
-            },
-            {
-                fontSize: 60,
-                scale: 2
-            }
-        );
-        this.resumeButton.visible = false;
-
-        this.addContent({ // add content to the screen layout
-            content: {
-                content: this.resumeButton,
-                styles: {
-                    paddingLeft: 85,
-                }
-            },
-            styles: { // set styles for the button block
-                position: 'center', // position the button in the bottom right corner of the parent
-                maxWidth: '40%', // set max width to 20% of the parent width so the layout witt scale down if the screen width is too small to fit it
-                maxHeight: '40%', // set max height to 20% of the parent height so the layout witt scale down if the screen height is too small to fit it
-            },
-        });
-    }
-
-    private addGame() { 
-        this.game = new Game({}).init();
-
-        this.addContent({
-            content: this.game,
-            styles: {
-                position: 'center',
-                width: wheelConfig.radius * 2,
-                height: wheelConfig.radius * 2,
-                maxWidth: '80%',
-                maxHeight: '80%',
-            }
-        });
-    }
-
     onUpdate() {
-        if (this.paused) {
-            return;
-        }
-
         this.fire?.update();
 
         if (this.game?.update) {
@@ -149,16 +102,4 @@ export class GameScreen extends AppScreen {
             this.game.resize(width, height);
         }
     };
-
-    private addEvents() { 
-        window.onfocus = () => this.pause();
-        window.onblur = () => this.paused = true;
-    }
-
-    private pause() {
-        if (!this.paused) return;
-
-        this.game.pause();
-        this.resumeButton.visible = true;
-    }
 }
