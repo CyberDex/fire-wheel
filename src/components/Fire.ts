@@ -1,4 +1,4 @@
-import { Quality, fireConfig, getQualityData } from "../config/fireConfig";
+import { Quality, Shape, fireConfig, getQualityData } from "../config/fireConfig";
 import { pixiApp } from "../main"
 import { Emitter } from '@pixi/particle-emitter';
 import { app } from "../App";
@@ -13,17 +13,17 @@ export class Fire {
         low: number;
         high: number;
     } = {
-            low: 0,
-            high: 0,
-        };
-    
-    constructor(target?: Container) { 
+        low: 0,
+        high: 0,
+    };
+
+    constructor(target?: Container, private type: Shape = 'rectangular') { 
         if (target) {
-            this.init(target);
+            this.init(target, type);
         }
     }
     
-    init(target: Container) {
+    init(target: Container, type: Shape) {
         this.safeQuality = null;
 
         if (this.fireEmitter) {
@@ -32,7 +32,7 @@ export class Fire {
 
         this.fireEmitter = new Emitter(
             target,
-            fireConfig(target.width, target.height, this.quality)
+            fireConfig(target.width, target.height, this.quality, type)
         );
 
         app.bg.swing(1.5, 10, 2);
@@ -76,8 +76,8 @@ export class Fire {
     private updateQuality() {
         console.log('quality', this.quality);
 
-        this.fireEmitter.frequency = getQualityData(this.quality).frequency;
-        this.fireEmitter.maxParticles = getQualityData(this.quality).maxParticles;
+        this.fireEmitter.frequency = getQualityData(this.quality, this.type).frequency;
+        this.fireEmitter.maxParticles = getQualityData(this.quality, this.type).maxParticles;
     }
 
     // TODO: improve quality adjust, use more frequency & maxParticles states

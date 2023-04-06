@@ -1,17 +1,20 @@
-import { AppScreen } from "../components/AppScreen";
 import { GameBase } from "./GameBase";
+import { Wheel } from "./Wheel";
 
 export class Game extends GameBase {
     paused = false;
     activated = false;
-    
-    constructor(scene: AppScreen) {
-        super({});
-        scene.addChild(this);
+    wheel!: Wheel;
+
+    init(): Game {
+        this.addWheel();
+
+        return this;
     }
 
-    async init() {
-        this.start();
+    private addWheel() { 
+        this.wheel = new Wheel();
+        this.addChild(this.wheel);
     }
 
     start() {
@@ -28,10 +31,12 @@ export class Game extends GameBase {
     }
     
     update() { 
- 
+        if (this.paused) {
+            return;
+        }
     }
     
-    resize(_width: number, _height: number) {
-
+    resize(width: number, height: number) {
+        // this.wheel?.resize(width, height);
     }
 }

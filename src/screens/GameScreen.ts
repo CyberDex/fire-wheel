@@ -9,24 +9,27 @@ import { gsap } from 'gsap';
 import { Fire } from '../components/Fire';
 import { Texture } from '@pixi/core';
 import { TilingSprite } from '@pixi/sprite-tiling';
+import { wheelConfig } from '../config/wheelConfig';
 
-export class GameScreen extends AppScreen { // GameScreen extends AppScreen, which is a Layout with a few additional features
-    public static assetBundles = ['game']; // asset bundles that will be loaded before the screen is shown
-    private game!: Game; // game instance
+export class GameScreen extends AppScreen {
+    public static assetBundles = ['game'];
+    private game!: Game;
     private resumeButton!: Button;
     private paused = false;
     private fire!: Fire;
 
-    constructor() { // constructor accepts an object with data that will be passed to the screen when it is shown
-        super('GameScreen'); // Creates Layout with id 'GameScreen'
+    constructor() {
+        super('GameScreen');
 
         app.addBG(); 
 
         this.addBottomFire();
 
-        this.addBackButton(); // add pause button component to the screen
+        this.addBackButton();
         
-        this.addResumeButton(); // add resume button component to the screen
+        this.addResumeButton();
+
+        this.addGame();
 
         this.addEvents();
     }
@@ -111,12 +114,27 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
         });
     }
 
+    private addGame() { 
+        this.game = new Game({}).init();
+
+        this.addContent({
+            content: this.game,
+            styles: {
+                position: 'center',
+                width: wheelConfig.radius * 2,
+                height: wheelConfig.radius * 2,
+                maxWidth: '80%',
+                maxHeight: '80%',
+            }
+        });
+    }
+
     onUpdate() {
         if (this.paused) {
             return;
         }
 
-        this.fire.update();
+        this.fire?.update();
 
         if (this.game?.update) {
             this.game.update();
