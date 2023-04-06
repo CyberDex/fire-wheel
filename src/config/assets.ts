@@ -19,15 +19,6 @@ export const assetsManifest: ResolverManifest = {
             name: 'game',
             assets: [
                 {
-                    name: 'coin-anim-data',
-                    srcs: 'assets/coin-anim.json',
-                    data: 'json'
-                },
-                {
-                    name: 'coin-anim',
-                    srcs: 'assets/coin-anim.png',
-                },
-                {
                     name: 'credits-rollup',
                     srcs: 'assets/sounds/credits-rollup.waw',
                 },
@@ -38,14 +29,6 @@ export const assetsManifest: ResolverManifest = {
                 {
                     name: 'wheel-landing',
                     srcs: 'assets/sounds/wheel-landing.waw',
-                },
-                {
-                    name: 'glow',
-                    srcs: 'assets/glow.png',
-                },
-                {
-                    name: 'sunburst',
-                    srcs: 'assets/sunburst.png',
                 },
                 {
                     name: 'bg',

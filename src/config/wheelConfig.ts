@@ -27,5 +27,9 @@ export const wheelConfig = {
         fontFamily: 'Days One',
         stroke: 0xff622c,
         strokeThickness: 3,
-    }
+    },
+    rotationsPerSpinMin: 5,
+    rotationsPerSpinMax: 10,
+    spinDurationMin: 10,
+    spinDurationMax: 15,
 }

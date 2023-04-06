@@ -4,7 +4,9 @@ import { Container } from "@pixi/display";
 import { Fire } from "../components/Fire";
 import { pixiApp } from "../main";
 import { Text } from "@pixi/text";
-import { gsap } from "gsap";
+import { Back, gsap } from "gsap";
+import { Sprite } from "@pixi/sprite";
+import { getRandomInRange } from "../utils/random";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
@@ -44,7 +46,7 @@ export class Wheel extends Container {
         this.wheel.cursor = 'pointer';
         
         this.wheel.on('pointerdown', () => { 
-            this.spin();
+            this.spin(getRandomInRange(360, 360 * 2));
         });
 
         const innerRadius = radius - borderSize;
@@ -52,7 +54,7 @@ export class Wheel extends Container {
         this.wheel
             .beginFill(wheelColor)
             .drawCircle(radius, radius, innerRadius);
-
+        
         this.addChild(this.wheel);
 
         for (let i = 0; i < sectorsCount; i++) {
@@ -109,6 +111,9 @@ export class Wheel extends Container {
 
         this.wheel.addChild(center);
         
+        this.wheel.pivot.set(wheelConfig.radius);
+        this.wheel.position.set(wheelConfig.radius);
+        
         pixiApp.ticker.add(() => {
             this.fire.update();
         });
@@ -131,14 +136,31 @@ export class Wheel extends Container {
         });
     }
 
-    spin() {
-        this.wheel.pivot.set(wheelConfig.radius);
-        this.wheel.position.set(wheelConfig.radius);
+    spin(angle: number) {
+        if (gsap.isTweening(this.wheel)) return;
+
+        const {
+            spinDurationMin,
+            spinDurationMax,
+            rotationsPerSpinMin,
+            rotationsPerSpinMax,
+        } = wheelConfig;
+
+        const duration = getRandomInRange(spinDurationMin, spinDurationMax);
+        const rotations = getRandomInRange(rotationsPerSpinMin, rotationsPerSpinMax);
+        const targetAngle = angle * rotations;
+        
+        console.log({
+            angle,
+            duration,
+            rotations,
+            targetAngle,
+        });
 
         gsap.to(this.wheel, {
-            duration: 5,
-            angle: `+=${360 * 5}`,
-            ease: 'power2.inOut',
+            duration,
+            angle: `+=${targetAngle}`,
+            ease: Back.easeOut.config(0.1),
         });
     }
 }
