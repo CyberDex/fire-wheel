@@ -20,6 +20,16 @@ export const wheelConfig = {
         1000,
         400,
     ],
+    weights: [
+        4,
+        100,
+        20,
+        50,
+        10,
+        100,
+        20,
+        50
+    ],
     numberPadding: 40,
     numbersStyle: {
         fill: 0xFFFFFF,
@@ -32,4 +42,7 @@ export const wheelConfig = {
     rotationsPerSpinMax: 10,
     spinDurationMin: 10,
     spinDurationMax: 15,
+    pointerColor: 0xFFFFFF,
+    pointerFillColor: 0x000000,
+    pointerSize: 50,
 }

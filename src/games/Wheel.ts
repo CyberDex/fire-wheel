@@ -15,7 +15,39 @@ export class Wheel extends Container {
         super();
 
         this.addBase();
+        this.addPointer();
         this.addFire();
+    }
+
+    private addPointer() {
+        const {
+            radius,
+            pointerColor,
+            pointerSize,
+            pointerFillColor
+        } = wheelConfig;
+
+        const pointer = new Graphics()
+            .beginFill(pointerColor)
+            .moveTo(0, 0)
+            .lineTo(pointerSize, 0)
+            .lineTo(pointerSize / 2, pointerSize)
+            .closePath();
+
+        const fillPointerSize = pointerSize * 0.8;
+        const fillOffset = pointerSize - fillPointerSize;
+        
+        pointer
+            .beginFill(pointerFillColor)
+            .moveTo(fillOffset, fillOffset / 2)
+            .lineTo(fillPointerSize, fillOffset / 2)
+            .lineTo((fillPointerSize + fillOffset) / 2, fillPointerSize)
+            .closePath();
+        
+        pointer.x = radius - pointerSize / 2;
+        pointer.y = -pointerSize * 0.8;
+        
+        this.addChild(pointer);
     }
 
     private addBase() { 
