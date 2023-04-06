@@ -23,13 +23,14 @@ export class GameScreen extends AppScreen {
 
         app.addBG(); 
 
+        this.addGame();
+        
         this.addBottomFire();
 
         this.addBackButton();
         
         this.addResumeButton();
 
-        this.addGame();
 
         this.addEvents();
     }

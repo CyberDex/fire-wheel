@@ -17,13 +17,27 @@ export class Fire {
         high: 0,
     };
 
-    constructor(target?: Container, private type: Shape = 'rectangular') { 
-        if (target) {
-            this.init(target, type);
+    constructor(parent?: Container, private type: Shape = 'rectangular') { 
+        if (parent) {
+            this.init({
+                parent,
+                type,
+                size: {
+                    width: parent.width,
+                    height: parent.height,
+                }
+            });
         }
     }
     
-    init(target: Container, type: Shape) {
+    init({ parent, type, size }: {
+        parent: Container,
+        type: Shape,
+        size: {
+            width: number;
+            height: number;
+        }
+    }): Fire {
         this.safeQuality = null;
 
         if (this.fireEmitter) {
@@ -31,14 +45,16 @@ export class Fire {
         }
 
         this.fireEmitter = new Emitter(
-            target,
-            fireConfig(target.width, target.height, this.quality, type)
+            parent,
+            fireConfig(size.width, size.height, this.quality, type)
         );
 
         app.bg.swing(1.5, 10, 2);
 
         this.elapsed = Date.now();
         this.fireEmitter.emit = true;
+
+        return this;
     }
 
     private qualityDown() {

@@ -1,4 +1,31 @@
 export const wheelConfig = {
-    color: 0x000000,
     radius: 250,
+    borderSize: 10,
+    wheelColor: 0x000000,
+    borderColor: 0xff622c,
+    lineColor: 0xff622c,
+    handlersColor: 0xFFFFFF,
+    handlersFillColor: 0x000000,
+    handlersSize: 15,
+    centerSize: 20,
+    centerColor: 0xFFFFFF,
+    centerFillColor: 0x000000,
+    credits: [
+        5000,
+        200,
+        1000,
+        400,
+        2000,
+        200,
+        1000,
+        400,
+    ],
+    numberPadding: 40,
+    numbersStyle: {
+        fill: 0xFFFFFF,
+        fontSize: 32,
+        fontFamily: 'Days One',
+        stroke: 0xff622c,
+        strokeThickness: 3,
+    }
 }
