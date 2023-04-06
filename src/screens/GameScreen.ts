@@ -11,6 +11,8 @@ import { startBalance } from '../config';
 import { Text } from '@pixi/text';
 import { StateData } from '../games/StateController';
 import { Container } from '@pixi/display';
+import { gsap } from 'gsap';
+import { log } from '../utils/log';
 
 export class GameScreen extends AppScreen {
     public static assetBundles = ['game'];
@@ -117,8 +119,19 @@ export class GameScreen extends AppScreen {
         });
     }
 
-    private updateBalance(balance: number) { 
-        this.balanceText.text = balance.toString();
+    private updateBalance(balance: number) {
+        const currentBalance = {
+            balance: parseInt(this.balanceText.text)
+        };
+
+        gsap.to(currentBalance, {
+            balance,
+            duration: 2,
+            onUpdate: () => { 
+                this.balanceText.text = Math.round(currentBalance.balance);
+            }
+        });
+        // this.balanceText.text = balance.toString();
     }
 
     onUpdate() {
