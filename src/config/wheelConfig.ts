@@ -65,4 +65,5 @@ export const wheelConfig = {
         showValue: false,
         showFill: false,
     },
+    balanceTextOffset: -80,
 }

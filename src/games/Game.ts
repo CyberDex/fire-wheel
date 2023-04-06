@@ -4,11 +4,15 @@ import { log } from "../utils/log";
 import { Wheel } from "./Wheel";
 import { GameState, State, StateController, StateData } from "./StateController";
 import { getRandomInRange, getRandomItem } from "../utils/random";
+import { updateNumber } from "../utils/cuonters";
+import { Text } from "@pixi/text";
+import i18n from "../config/i18n";
 
 
 export class Game extends Container {
     private weights: number[] = [];
     private stateController: StateController;
+    private balanceText!: Text;
 
     paused = false;
     activated = false;
@@ -28,6 +32,8 @@ export class Game extends Container {
         this.initWeights();
 
         this.addWheel();
+
+        this.addBalanceText();
 
         this.addEvents();
 
@@ -50,8 +56,52 @@ export class Game extends Container {
         this.addChild(this.wheel);
     }
 
+    private addBalanceText() {
+        const title = new Text(i18n.game.balance, {
+            fill: 0xFFFFFF,
+            fontSize: 32,
+            fontFamily: 'Days One',
+            stroke: 0xff622c,
+            strokeThickness: 3,
+            wordWrap: false,
+            align: 'center',
+        });
+
+        title.anchor.set(0.5);
+        title.x = wheelConfig.radius;
+
+        this.balanceText = new Text('', {
+            fill: 0xFFFFFF,
+            fontSize: 32,
+            fontFamily: 'Days One',
+            stroke: 0xff622c,
+            strokeThickness: 3,
+            wordWrap: false,
+            align: 'center',
+        });
+
+        this.balanceText.anchor.set(0.5);
+        this.balanceText.x = wheelConfig.radius;
+        this.balanceText.y = wheelConfig.balanceTextOffset;
+
+        title.y = this.balanceText.y - this.balanceText.height / 2 - title.height / 2;
+
+        this.addChild(this.balanceText, title);
+
+        this.state.onChange.connect((key: StateData, value: State[StateData]) => {
+            if (key !== 'balance') return;
+
+            updateNumber(this.balanceText, value);
+        });
+        
+        updateNumber(this.balanceText, this.state.balance);        
+    }
+
     private addEvents() { 
         this.state.onChange.connect((key: StateData, value: State[StateData]) => {
+
+            
+
             if (key !== 'gameState') return;
 
             switch (value as GameState) {

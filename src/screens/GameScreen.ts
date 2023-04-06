@@ -7,19 +7,11 @@ import { Fire } from '../components/Fire';
 import { Texture } from '@pixi/core';
 import { TilingSprite } from '@pixi/sprite-tiling';
 import { wheelConfig } from '../config/wheelConfig';
-import { startBalance } from '../config';
-import { Text } from '@pixi/text';
-import { StateData } from '../games/StateController';
-import { Container } from '@pixi/display';
-import { gsap } from 'gsap';
-import { log } from '../utils/log';
-import i18n from '../config/i18n';
 
 export class GameScreen extends AppScreen {
     public static assetBundles = ['game'];
     private game!: Game;
     private fire!: Fire;
-    private balanceText!: Text;
 
     constructor() {
         super('GameScreen');
@@ -31,18 +23,10 @@ export class GameScreen extends AppScreen {
         this.addBottomFire();
 
         this.addBackButton();
-
-        this.addBalance(startBalance);
     }
 
     private addGame() { 
         this.game = new Game().init();
-
-        this.game.state.onChange.connect((key: StateData, value) => { 
-            if (key === 'balance') {
-                this.updateBalance(value);
-            }
-        });
 
         this.addContent({
             content: this.game,
@@ -95,59 +79,6 @@ export class GameScreen extends AppScreen {
                 maxWidth: '33%', // set max width to 20% of the parent width so the layout witt scale down if the screen width is too small to fit it
                 maxHeight: '20%', // set max height to 20% of the parent height so the layout witt scale down if the screen height is too small to fit it
             },
-        });
-    }
-
-    private addBalance(balance: number) { 
-        this.balanceText = new Text();
-        this.updateBalance(balance);
-
-        this.addContent({
-            content: i18n.game.balance,
-            styles: {
-                position: 'topCenter',
-                fill: 0xFFFFFF,
-                fontSize: 32,
-                fontFamily: 'Days One',
-                stroke: 0xff622c,
-                strokeThickness: 3,
-                wordWrap: false,
-                textAlign: 'center',
-                width: '100%',
-                height: this.balanceText.height,
-            }
-        });
-
-        this.addContent({
-            content: this.balanceText,
-            styles: {
-                position: 'topCenter',
-                fill: 0xFFFFFF,
-                fontSize: 32,
-                fontFamily: 'Days One',
-                stroke: 0xff622c,
-                strokeThickness: 3,
-                wordWrap: false,
-                textAlign: 'center',
-                width: '100%',
-                height: this.balanceText.height,
-                marginTop: 50
-            }
-        });
-
-    }
-
-    private updateBalance(balance: number) {
-        const currentBalance = {
-            balance: parseInt(this.balanceText.text)
-        };
-
-        gsap.to(currentBalance, {
-            balance,
-            duration: 1,
-            onUpdate: () => { 
-                this.balanceText.text = `${Math.round(currentBalance.balance)}`;
-            }
         });
     }
 
