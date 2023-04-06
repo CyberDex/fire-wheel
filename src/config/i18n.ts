@@ -11,4 +11,7 @@ export default {
             repo: "Code on GitHub",
         },
     },
+    game: {
+        balance: "BALANCE",
+    }
 }

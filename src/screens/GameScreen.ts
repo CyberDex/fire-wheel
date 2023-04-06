@@ -13,6 +13,7 @@ import { StateData } from '../games/StateController';
 import { Container } from '@pixi/display';
 import { gsap } from 'gsap';
 import { log } from '../utils/log';
+import i18n from '../config/i18n';
 
 export class GameScreen extends AppScreen {
     public static assetBundles = ['game'];
@@ -98,25 +99,42 @@ export class GameScreen extends AppScreen {
     }
 
     private addBalance(balance: number) { 
-        this.balanceText = new Text(balance.toString(), {
+        this.balanceText = new Text();
+        this.updateBalance(balance);
+
+        this.addContent({
+            content: i18n.game.balance,
+            styles: {
+                position: 'topCenter',
                 fill: 0xFFFFFF,
                 fontSize: 32,
                 fontFamily: 'Days One',
                 stroke: 0xff622c,
                 strokeThickness: 3,
                 wordWrap: false,
-        });
-        this.balanceText.anchor.set(1, 0);
-
-        const text = new Container();
-        text.addChild(this.balanceText);
-
-        this.addContent({
-            content: text,
-            styles: {
-                position: 'topRight',
+                textAlign: 'center',
+                width: '100%',
+                height: this.balanceText.height,
             }
         });
+
+        this.addContent({
+            content: this.balanceText,
+            styles: {
+                position: 'topCenter',
+                fill: 0xFFFFFF,
+                fontSize: 32,
+                fontFamily: 'Days One',
+                stroke: 0xff622c,
+                strokeThickness: 3,
+                wordWrap: false,
+                textAlign: 'center',
+                width: '100%',
+                height: this.balanceText.height,
+                marginTop: 50
+            }
+        });
+
     }
 
     private updateBalance(balance: number) {
@@ -126,12 +144,11 @@ export class GameScreen extends AppScreen {
 
         gsap.to(currentBalance, {
             balance,
-            duration: 2,
+            duration: 1,
             onUpdate: () => { 
-                this.balanceText.text = Math.round(currentBalance.balance);
+                this.balanceText.text = `${Math.round(currentBalance.balance)}`;
             }
         });
-        // this.balanceText.text = balance.toString();
     }
 
     onUpdate() {
