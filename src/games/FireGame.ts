@@ -44,25 +44,7 @@ export class FireGame extends GameBase implements IGame {
             fireConfig(this.widthCache, this.quality)
         );
 
-        let velocity = 0;
-        let kernelSize = 0;
-
-        game.bg.swing(2, 2, 2);
-
-        const interval = setInterval(() => {
-            if (velocity < 40) {
-                velocity++;
-            } else {
-                clearInterval(interval);
-            }
-
-            if (kernelSize < 15) {
-                kernelSize++;
-            }
-
-            game.bg.filter.velocity.set(velocity);
-            game.bg.filter.kernelSize = kernelSize;
-        }, 100);
+        game.bg.swing(1.5, 10, 2);
 
         this.elapsed = Date.now();
         this.fireEmitter.emit = true;

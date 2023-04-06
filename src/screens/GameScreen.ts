@@ -37,6 +37,7 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
      */
     private addBackButton() {
         const button = new SmallIconButton('HomeIcon', () => { // create a button with a custom icon
+            game.bg.stopSwing();
             game.showScreen(TitleScreen); 
         });
 

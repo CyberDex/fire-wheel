@@ -13,6 +13,8 @@ export class Background extends Layout {
     bgSprite: Sprite;
     animation: gsap.core.Timeline;
 
+    private filterApplied = false;
+
     constructor() {
         const bg = Sprite.from('bg');
 
@@ -43,17 +45,40 @@ export class Background extends Layout {
         this.animation = gsap.timeline();
     }
 
+    swing(power: number, duration: number = 0.5, delay: number = 0) {
+        this.filterApplied = true;
+        
+        if (this.animation.paused()) {
+            setTimeout(() => this.animation.resume(), delay * 1000);
+            return;
+        }
+        
+        this.animation.to(this, 0.1, {x:`+=${power}`, yoyo:true, repeat:-1, duration, delay});
+        this.animation.to(this, 0.1, { x: `-=${power}`, yoyo: true, repeat: -1, duration });    }
+
+    stopSwing() {
+        this.resetFilter();
+        this.animation.pause();
+    }
+
     resetFilter() {
+        this.filterApplied = false;
         this.filter.velocity.set(0);
         this.filter.kernelSize = 0;
     }
     
-    pause() {
-        this.animation.pause()
+    update(): void {
+        if (!this.filterApplied) {
+            return;
+        }
+
+        if (this.filter.velocity.x < 40) {
+            this.filter.velocity.x += 0.1;
+        }
+
+        if (this.filter.kernelSize < 15) {
+            this.filter.kernelSize += 0.1;
+        }
     }
 
-    swing(power: number, duration: number = 0.5, delay: number = 0) {
-        this.animation.to(this, 0.1, {x:`+=${power}`, yoyo:true, repeat:-1, duration, delay});
-        this.animation.to(this, 0.1, {x:`-=${power}`, yoyo:true, repeat:-1, duration});
-    }
 }

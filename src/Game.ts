@@ -44,6 +44,7 @@ class Game { // We DO NOT export this class, as we want to have only one instanc
 
         this.bg.resize(this._w, this._h); // Resize background as it is a layout and it needs to know its size in order it's core functionality to work
         app.stage.addChild(this.bg); // Add background to the stage
+        app.ticker.add(() => this.bg.update());
     }
 
     /** Add screen to the stage, link update & resize functions */
