@@ -3,6 +3,7 @@ import { pixiApp } from "../main"
 import { Emitter } from '@pixi/particle-emitter';
 import { app } from "../App";
 import { Container } from "@pixi/display";
+import { log } from "../utils/log";
 
 export class Fire {
     private fireEmitter!: Emitter;
@@ -66,8 +67,6 @@ export class Fire {
             this.quality = 'medium';
         }
 
-        console.log('quality', this.quality);
-
         this.safeQuality = this.quality;
 
         this.fps.low = 0;
@@ -90,7 +89,7 @@ export class Fire {
     }
 
     private updateQuality() {
-        console.log('quality', this.quality);
+        log('quality', this.quality);
 
         this.fireEmitter.frequency = getQualityData(this.quality, this.type).frequency;
         this.fireEmitter.maxParticles = getQualityData(this.quality, this.type).maxParticles;
@@ -99,7 +98,7 @@ export class Fire {
     // TODO: improve quality adjust, use more frequency & maxParticles states
     private adjustQuality() {
         // console.log({
-        //     fps: app.ticker.FPS,
+        //     fps: pixiApp.ticker.FPS,
         //     data: this.fps,
         //     quality: this.quality
         // });

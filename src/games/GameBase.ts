@@ -25,7 +25,8 @@ export class GameBase extends Container {
                 this._state[key] = value;
 
                 this.onStateChange.emit(key, value);
-            }
+            },
+            getAll: () => this._state
         }
     }
 }

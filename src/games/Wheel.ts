@@ -6,12 +6,14 @@ import { pixiApp } from "../main";
 import { Text } from "@pixi/text";
 import { Back, gsap } from "gsap";
 import { getRandomInRange } from "../utils/random";
+import { Game } from "./Game";
+import { log } from "../utils/log";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
     private fire!: Fire;
 
-    constructor() {
+    constructor(private game: Game) {
         super();
 
         this.addBase();
@@ -167,7 +169,7 @@ export class Wheel extends Container {
         });
     }
 
-    spin(angle: number) {
+    async spin(angle: number) {
         if (gsap.isTweening(this.wheel)) return;
 
         const {
@@ -181,7 +183,7 @@ export class Wheel extends Container {
         const rotations = getRandomInRange(rotationsPerSpinMin, rotationsPerSpinMax);
         const targetAngle = angle * rotations;
         
-        console.log({
+        log({
             angle,
             duration,
             rotations,
@@ -192,6 +194,9 @@ export class Wheel extends Container {
             duration,
             angle: `+=${targetAngle}`,
             ease: Back.easeOut.config(0.1),
+            onComplete: () => { 
+                this.game.state.set('state', 'spinEnd');
+            }
         });
     }
 }
