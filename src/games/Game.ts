@@ -36,7 +36,6 @@ export class Game extends GameBase {
         }
     }
     
-    resize(width: number, height: number) {
-        // this.wheel?.resize(width, height);
+    resize(_width: number, _height: number) {
     }
 }

@@ -5,7 +5,6 @@ import { Fire } from "../components/Fire";
 import { pixiApp } from "../main";
 import { Text } from "@pixi/text";
 import { Back, gsap } from "gsap";
-import { Sprite } from "@pixi/sprite";
 import { getRandomInRange } from "../utils/random";
 
 export class Wheel extends Container {
@@ -113,7 +112,7 @@ export class Wheel extends Container {
         
         this.wheel.pivot.set(wheelConfig.radius);
         this.wheel.position.set(wheelConfig.radius);
-        
+
         pixiApp.ticker.add(() => {
             this.fire.update();
         });

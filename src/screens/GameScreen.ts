@@ -3,9 +3,6 @@ import { SmallIconButton } from '../components/SmallIconButton';
 import { app } from '../App';
 import { TitleScreen } from './TitleScreen';
 import { Game } from '../games/Game';
-import { Button } from '../components/Button';
-import i18n from '../config/i18n';
-import { gsap } from 'gsap';
 import { Fire } from '../components/Fire';
 import { Texture } from '@pixi/core';
 import { TilingSprite } from '@pixi/sprite-tiling';
@@ -14,8 +11,6 @@ import { wheelConfig } from '../config/wheelConfig';
 export class GameScreen extends AppScreen {
     public static assetBundles = ['game'];
     private game!: Game;
-    private resumeButton!: Button;
-    private paused = false;
     private fire!: Fire;
 
     constructor() {
