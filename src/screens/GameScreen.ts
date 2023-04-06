@@ -8,11 +8,8 @@ import { Button } from '../components/Button';
 import i18n from '../config/i18n';
 import { gsap } from 'gsap';
 
-export type GameTypes = 'fire';
-
 export class GameScreen extends AppScreen { // GameScreen extends AppScreen, which is a Layout with a few additional features
     public static assetBundles = ['game']; // asset bundles that will be loaded before the screen is shown
-    private gameType: GameTypes = 'fire'; // game type
     private game!: IGame; // game instance
     private resumeButton!: Button;
     private paused = false;
@@ -118,8 +115,6 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
 
     private pause() {
         if (!this.paused) return;
-
-        if (this.gameType === 'fire') return;
 
         this.game.pause();
         this.resumeButton.visible = true;

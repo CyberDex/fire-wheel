@@ -3,10 +3,8 @@ import { app } from './main';
 import { AppScreen } from './components/AppScreen';
 import { Background } from './components/Background';
 import { areBundlesLoaded } from './utils/preload';
-import { GameTypes } from './screens/GameScreen';
 
 export type SceneData = {
-    type?: GameTypes,
     restart?: boolean,
 }
 
