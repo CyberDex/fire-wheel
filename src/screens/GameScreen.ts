@@ -7,7 +7,8 @@ import { Button } from '../components/Button';
 import i18n from '../config/i18n';
 import { gsap } from 'gsap';
 import { Fire } from '../components/Fire';
-import { Sprite } from '@pixi/sprite';
+import { Texture } from '@pixi/core';
+import { TilingSprite } from '@pixi/sprite-tiling';
 
 export class GameScreen extends AppScreen { // GameScreen extends AppScreen, which is a Layout with a few additional features
     public static assetBundles = ['game']; // asset bundles that will be loaded before the screen is shown
@@ -21,20 +22,7 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
 
         app.addBG(); 
 
-        // this.game = new FireGame(this);
-        // this.game.init();
-        
-        const logo = Sprite.from('pixi-logo');
-
-        this.fire = new Fire();
-        this.fire.init(logo);
-
-        this.addContent({
-            content: logo,
-            styles: {
-                position: 'center',
-            }
-        });
+        this.addBottomFire();
 
         this.addBackButton(); // add pause button component to the screen
         
@@ -43,9 +31,25 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
         this.addEvents();
     }
 
-    /** Add pause button component to the screen.
-     * Pause button suits to pause the game and show the pause window and the title screen.
-     */
+    private addBottomFire() { 
+        const base = new TilingSprite(Texture.EMPTY);
+        
+        base.width = app.width;
+        base.height = 50;
+        
+        this.fire = new Fire(base);
+
+        this.addContent({
+            content: base,
+            styles: {
+                position: 'bottom',
+                marginBottom: -30
+            }
+        });
+
+        return base;
+    }
+
     private addBackButton() {
         const button = new SmallIconButton('HomeIcon', () => { // create a button with a custom icon
             app.bg.stopSwing();
@@ -107,8 +111,11 @@ export class GameScreen extends AppScreen { // GameScreen extends AppScreen, whi
         });
     }
 
-    /** Method that is called one every game tick (see Game.ts) */
     onUpdate() {
+        if (this.paused) {
+            return;
+        }
+
         this.fire.update();
 
         if (this.game?.update) {

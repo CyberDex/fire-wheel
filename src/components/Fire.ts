@@ -17,6 +17,12 @@ export class Fire {
             high: 0,
         };
     
+    constructor(target?: Container) { 
+        if (target) {
+            this.init(target);
+        }
+    }
+    
     init(target: Container) {
         this.safeQuality = null;
 

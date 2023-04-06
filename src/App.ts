@@ -116,6 +116,9 @@ class App { // We DO NOT export this class, as we want to have only one instance
         this.currentScreen?.resize?.(w, h); // Resize current screen, if available
         this.bg?.resize(w, h); // Resize background, if available
     }
+
+    get width() { return this._w; } // Get last known width
+    get height() { return this._h; } // Get last known height
 }
 
 export const app = new App(); // Export a new instance of the game
