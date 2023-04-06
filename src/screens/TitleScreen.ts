@@ -20,6 +20,10 @@ export class TitleScreen extends AppScreen { // extends AppScreen that extends L
             i18n.titleScreen.menu.play, // button text
             () => {
                 game.showScreen(GameScreen);
+            },
+            {
+                fontSize: 60,
+                scale: 2
             }
         );
 
