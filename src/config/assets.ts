@@ -19,6 +19,26 @@ export const assetsManifest: ResolverManifest = {
             name: 'game',
             assets: [
                 {
+                    name: 'credits-rollup',
+                    srcs: 'assets/sounds/credits-rollup.waw',
+                },
+                {
+                    name: 'wheel-click',
+                    srcs: 'assets/sounds/wheel-click.waw',
+                },
+                {
+                    name: 'wheel-landing',
+                    srcs: 'assets/sounds/wheel-landing.waw',
+                },
+                {
+                    name: 'glow',
+                    srcs: 'assets/glow.png',
+                },
+                {
+                    name: 'sunburst',
+                    srcs: 'assets/sunburst.png',
+                },
+                {
                     name: 'bg',
                     srcs: 'assets/bg.jpg',
                 },
