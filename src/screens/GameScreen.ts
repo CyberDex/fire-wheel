@@ -9,6 +9,8 @@ import { TilingSprite } from '@pixi/sprite-tiling';
 import { wheelConfig } from '../config/wheelConfig';
 import { startBalance } from '../config';
 import { Text } from '@pixi/text';
+import { StateData } from '../games/StateController';
+import { Container } from '@pixi/display';
 
 export class GameScreen extends AppScreen {
     public static assetBundles = ['game'];
@@ -31,11 +33,9 @@ export class GameScreen extends AppScreen {
     }
 
     private addGame() { 
-        this.game = new Game({
-            balance: 1000,
-        }).init();
+        this.game = new Game().init();
 
-        this.game.onStateChange.connect((key, value) => { 
+        this.game.state.onChange.connect((key: StateData, value) => { 
             if (key === 'balance') {
                 this.updateBalance(value);
             }
@@ -96,19 +96,23 @@ export class GameScreen extends AppScreen {
     }
 
     private addBalance(balance: number) { 
-        this.balanceText = new Text(balance.toString());
-
-        this.addContent({
-            content: this.balanceText,
-            styles: {
-                margin: 20,
-                position: 'topRight',
-                maxWidth: '33%',
+        this.balanceText = new Text(balance.toString(), {
                 fill: 0xFFFFFF,
                 fontSize: 32,
                 fontFamily: 'Days One',
                 stroke: 0xff622c,
                 strokeThickness: 3,
+                wordWrap: false,
+        });
+        this.balanceText.anchor.set(1, 0);
+
+        const text = new Container();
+        text.addChild(this.balanceText);
+
+        this.addContent({
+            content: text,
+            styles: {
+                position: 'topRight',
             }
         });
     }

@@ -8,17 +8,27 @@ import { Back, gsap } from "gsap";
 import { getRandomInRange } from "../utils/random";
 import { Game } from "./Game";
 import { log } from "../utils/log";
+import { GameState, ResultNumber, State, StateData } from "./StateController";
+import { Slider } from "@pixi/ui";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
     private fire!: Fire;
+    private idleAnimation: gsap.core.Timeline;
+    private resultAnimation: gsap.core.Timeline;
 
     constructor(private game: Game) {
         super();
 
         this.addBase();
         this.addPointer();
+        // this.addArm();
         this.addFire();
+
+        this.idleAnimation = gsap.timeline();
+        this.resultAnimation = gsap.timeline();
+
+        this.addEvents();
     }
 
     private addPointer() {
@@ -55,17 +65,16 @@ export class Wheel extends Container {
     private addBase() { 
         let {
             numberPadding,
-            numbersStyle, credits,
+            numbersStyle,
+            credits,
             radius,
             wheelColor,
-            handlersColor,
             lineColor,
             borderColor,
             borderSize,
-            handlersSize,
             centerSize,
             centerColor,
-            handlersFillColor,
+            handlesSize,
             centerFillColor
         } = wheelConfig;
         const sectorsCount = credits.length;
@@ -78,9 +87,7 @@ export class Wheel extends Container {
         this.wheel.interactive = true;
         this.wheel.cursor = 'pointer';
         
-        this.wheel.on('pointerdown', () => { 
-            this.spin(getRandomInRange(360, 360 * 2));
-        });
+        this.wheel.on('pointerdown', () => this.startSpin());
 
         const innerRadius = radius - borderSize;
         
@@ -96,24 +103,14 @@ export class Wheel extends Container {
             this.wheel.moveTo(radius, radius);
 
             this.wheel.lineTo(
-                radius + innerRadius * Math.cos(angle), 
+                radius + innerRadius * Math.cos(angle),
                 radius + innerRadius * Math.sin(angle),
             );
 
-            const circle = new Graphics()
-                .beginFill(handlersColor)
-                .drawCircle(
-                    radius + (innerRadius + handlersSize / 2) * Math.cos(angle), 
-                    radius + (innerRadius + handlersSize / 2) * Math.sin(angle),
-                    handlersSize
-                )
-                .beginFill(handlersFillColor)
-                .drawCircle(
-                    radius + (innerRadius + handlersSize / 2) * Math.cos(angle), 
-                    radius + (innerRadius + handlersSize / 2) * Math.sin(angle),
-                    handlersSize * 0.8
-                );
-            this.wheel.addChild(circle);
+            this.addHandle(
+                radius + (innerRadius + handlesSize / 2) * Math.cos(angle),
+                radius + (innerRadius + handlesSize / 2) * Math.sin(angle)
+            )
 
             const numberAngle = (i + 0.5) * angleIncrement;
             const number = new Text(credits[i].toString(), numbersStyle);
@@ -152,6 +149,69 @@ export class Wheel extends Container {
         });
     }
 
+    private addHandle(x: number, y: number) { 
+        const {
+            handlesSize,
+            handlesColor,
+            handlesFillColor,
+        } = wheelConfig;
+
+        this.wheel.addChild(
+            new Graphics()
+            .beginFill(handlesColor)
+            .drawCircle(x, y, handlesSize)
+            .beginFill(handlesFillColor)
+            .drawCircle(x,y, handlesSize * 0.8)
+        );
+    }
+
+    private addArm() { 
+        const { 
+            meshColor,
+            borderColor,
+            backgroundColor,
+            min,
+            max,
+            value,
+            width,
+            height,
+            radius,
+            border,
+            handleBorder,
+        } = wheelConfig.arm;
+
+        const bg = new Graphics()
+            .beginFill(borderColor)
+            .drawRoundedRect(0, 0, width, height, radius)
+            .beginFill(backgroundColor)
+            .drawRoundedRect(border, border, width - (border * 2), height - (border * 2), radius);
+
+        const slider = new Graphics()
+            .beginFill(borderColor)
+            .drawCircle(0, 0, 20 + handleBorder)
+            .beginFill(meshColor)
+            .drawCircle(0, 0, 20)
+            .endFill();
+
+        // Component usage
+        const singleSlider = new Slider({
+            bg,
+            slider,
+            min,
+            max,
+            value,
+        });
+        
+        singleSlider.onUpdate.connect((value: number) => { 
+            this.wheel.angle = 360 / 100 * value;
+            log({
+                angle: this.wheel.angle,
+            })
+        });
+
+        this.addChild(singleSlider);
+    }
+
     private addFire() { 
         let {
             radius,
@@ -169,33 +229,89 @@ export class Wheel extends Container {
         });
     }
 
-    async spin(angle: number) {
-        if (gsap.isTweening(this.wheel)) return;
+    private addEvents() { 
+        this.game.state.onChange.connect((key: StateData, value: State[StateData]) => {
+            if (key !== 'gameState') return;
 
+            switch (value as GameState) {
+                case 'spin':
+                    this.idleSpin();
+                    break;
+                case 'result':
+                    this.showResult();
+                    break;
+                case "idle":
+                    // maybe unblock spin button here
+                    break;                
+            }
+        });
+    }
+
+    startSpin() {
+        if (this.game.state.gameState === 'idle') {            
+            this.game.state.gameState = 'spin';
+        }
+    }
+
+    idleSpin() {
+        if (this.idleAnimation.paused()) {
+            this.idleAnimation.resume();
+            return;
+        }
+
+        const { idleSpeed } = wheelConfig;
+
+        this.idleAnimation.to(this.wheel, {
+            idleSpeed,
+            angle: `+=720`,
+            repeat: -1,
+            ease: 'linear'
+        });
+    }
+
+    showResult() { 
         const {
-            spinDurationMin,
-            spinDurationMax,
-            rotationsPerSpinMin,
-            rotationsPerSpinMax,
+            rotationsForReveal,
+            angles,
+            idleSpeed,
         } = wheelConfig;
+                
+        const result = this.game.state.result as ResultNumber;
 
-        const duration = getRandomInRange(spinDurationMin, spinDurationMax);
-        const rotations = getRandomInRange(rotationsPerSpinMin, rotationsPerSpinMax);
-        const targetAngle = angle * rotations;
-        
+        let resultAngleRange: [number, number] = [0, 0];
+
+        if (Array.isArray(angles[result][0])) { 
+            const randomOf2 = getRandomInRange(0, 1);
+            resultAngleRange = angles[result][randomOf2] as [number, number];
+        } else {
+            resultAngleRange = angles[result][0] as [number, number];
+        }
+
+        const resultAngleFrom = resultAngleRange[0];
+        const resultAngleTo = resultAngleRange[1];
+
+        const resultAngle = getRandomInRange(resultAngleFrom, resultAngleTo);
+        const targetAngle = resultAngle + (360 * rotationsForReveal);
+
+        const resultAngleSpeedModificator = resultAngle / 360;
+
         log({
-            angle,
-            duration,
-            rotations,
+            result,
+            resultAngleFrom,
+            resultAngleTo,
+            rotationsForReveal,
             targetAngle,
+            resultAngleSpeedModificator
         });
 
-        gsap.to(this.wheel, {
-            duration,
-            angle: `+=${targetAngle}`,
+        this.idleAnimation.pause();
+
+        this.resultAnimation.to(this.wheel, {
+            duration: rotationsForReveal + (idleSpeed * resultAngleSpeedModificator),
+            angle: targetAngle,
             ease: Back.easeOut.config(0.1),
             onComplete: () => { 
-                this.game.state.set('state', 'spinEnd');
+                this.game.state.gameState = 'idle';
             }
         });
     }

@@ -1,16 +1,18 @@
 export const logSystem = new class LogSystem {
-    private _logs: string[] = [];
+    private _logs: (string | {})[] = [];
 
     get logs() { 
         return this._logs;
     }
 
-    log(...args: any[]) { 
-        const log = args.join(' ');
+    log(args: string | {}) { 
+        this._logs.push(args);
 
-        this._logs.push(log);
-
-        console.log(`🔥 ${log}`);
+        if (typeof args === 'string') {
+            console.log(`🔥 ${log}`);
+        } else {
+            console.log(`🔥`, args);
+        }
     }
 
     clear() { 
@@ -18,4 +20,4 @@ export const logSystem = new class LogSystem {
     }
 }
 
-export const log = (...args: any[]) => logSystem.log(args);
+export const log = (args: string | {}) => logSystem.log(args);

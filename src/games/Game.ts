@@ -1,17 +1,28 @@
+import { Container } from "@pixi/display";
 import { wheelConfig } from "../config/wheelConfig";
 import { log } from "../utils/log";
-import { getRandomItem } from "../utils/random";
-import { GameBase } from "./GameBase";
 import { Wheel } from "./Wheel";
+import { GameState, State, StateController, StateData } from "./StateController";
+import { getRandomInRange, getRandomItem } from "../utils/random";
 
-type GameState = 'idle' | 'spin';
 
-export class Game extends GameBase {
+export class Game extends Container {
     private weights: number[] = [];
+    private stateController: StateController;
 
     paused = false;
     activated = false;
     wheel!: Wheel;
+
+    constructor() {
+        super();
+
+        this.stateController = new StateController();
+    }
+
+    get state() { 
+        return this.stateController;
+    }
 
     init(): Game {
         this.initWeights();
@@ -40,42 +51,25 @@ export class Game extends GameBase {
     }
 
     private addEvents() { 
-        this.onStateChange.connect((key, value) => { 
+        this.state.onChange.connect((key: StateData, value: State[StateData]) => {
+            if (key !== 'gameState') return;
 
-            log(`${key} => ${value}`);
-
-            switch (key) {
-                case 'state':
-                    this.onStateUpdate(value as any);
-                    break;  
+            switch (value as GameState) {
+                case 'spin':
+                    const serverResponseTime = getRandomInRange(1000, 3000);
+                
+                    setTimeout(() => { 
+                        this.state.result = getRandomItem(this.weights);
+                    }, serverResponseTime)
+                    break;
+                case 'result':
+                    // show win animation
+                    break;
+                case "idle":
+                    // maybe unblock spin button here
+                    break;                
             }
         });
-    }
-
-    private onStateUpdate(state: GameState) { 
-        switch (state) {
-            case 'idle':
-                
-                break;
-            case 'spin':
-                this.state.set('result', getRandomItem(this.weights))
-                break;
-            default:
-                break;
-        }
-    }
-
-    start() {
-        
-    }
-
-    pause() {
-        this.paused = true;
-    }
-
-    resume() {
-        this.paused = false;
-        
     }
     
     update() { 
