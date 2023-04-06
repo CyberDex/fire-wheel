@@ -8,13 +8,13 @@ export function getQualityData(quality: Quality, type: Shape): {
     switch (`${quality}-${type}`) {
         case 'medium-rectangular':
             return {
-                frequency: 0.00001,
-                maxParticles: 2000,
+                frequency: 0.0009,
+                maxParticles: 7000,
             };
         case 'high-rectangular':
             return {
-                frequency: 0.00009,
-                maxParticles: 10000,
+                frequency: 0.0004,
+                maxParticles: 3000,
             };
         // case 'medium-circular':
         //     return {
