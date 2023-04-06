@@ -22,7 +22,7 @@ export function getQualityData(quality: Quality, type: Shape): {
         //         maxParticles: 2000,
         //     };
         // case 'high-circular':
-        //     return {
+        //     return {4
         //         frequency: 0.00009,
         //         maxParticles: 10000,
         //     };
