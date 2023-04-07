@@ -41,8 +41,10 @@ export class Game extends Container {
 
         this.addEvents()
 
-        sound.add('wheel-landing', 'assets/sounds/wheel-landing.wav');
-
+        if (!sound.find('fire-storm').isPlaying) {
+            sound.play('fire-storm', { loop: true, volume: 0.5 });
+        }
+        
         return this;
     }
 

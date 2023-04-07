@@ -7,7 +7,6 @@ import i18n from '../config/i18n';
 import { Container } from '@pixi/display';
 import { Text } from '@pixi/text';
 import { Fire } from '../components/Fire';
-import { sound } from '@pixi/sound';
 
 /** Title screen. 
  * To be used to show when game is on pause or before the game starts.
@@ -20,15 +19,12 @@ export class TitleScreen extends AppScreen { // extends AppScreen that extends L
     constructor() {
         super('TitleScreen'); // Creates Layout with id 'TitleScreen'
         
-        sound.add('fire-storm', 'assets/sounds/fire-storm.mp3');
-        
         app.addBG(); 
 
         const startButton = new Button( // create a levels window navigational button
             i18n.titleScreen.menu.play, // button text
             () => {
                 if (!this.isMusicOn) { 
-                    sound.play('fire-storm', { loop: true, volume: 0.5 });
                     this.isMusicOn = true;
                 }
                 app.showScreen(GameScreen);

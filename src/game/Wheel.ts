@@ -6,7 +6,7 @@ import { Text } from "@pixi/text";
 import { Back, gsap } from "gsap";
 import { getRandomInRange, getRandomItem } from "../utils/random";
 import { Game } from "./Game";
-import { IMediaInstance, Sound, sound } from "@pixi/sound";
+import { sound } from "@pixi/sound";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
@@ -22,8 +22,6 @@ export class Wheel extends Container {
 
         this.addFire();
         this.idleSpin();
-
-        sound.add('wheel-click', 'assets/sounds/wheel-click.wav');
     }
 
     private addPointer() {
@@ -97,11 +95,6 @@ export class Wheel extends Container {
                 radius + innerRadius * Math.sin(angle),
             );
 
-            this.addHandle(
-                radius + (innerRadius + handlesSize / 2) * Math.cos(angle),
-                radius + (innerRadius + handlesSize / 2) * Math.sin(angle)
-            )
-
             const numberAngle = (i + 0.5) * angleIncrement;
             const number = new Text(credits[i].toString(), numbersStyle);
 
@@ -111,6 +104,11 @@ export class Wheel extends Container {
             number.y = radius + (innerRadius - numberPadding) * Math.sin(numberAngle + Math.PI / 2);
             
             number.angle = (numberAngle * 180) / Math.PI;
+
+            this.addHandle(
+                radius + (innerRadius + handlesSize / 2) * Math.cos(numberAngle + Math.PI / 2),
+                radius + (innerRadius + handlesSize / 2) * Math.sin(numberAngle + Math.PI / 2)
+            )
 
             this.wheel.addChild(number);
         }
@@ -212,7 +210,7 @@ export class Wheel extends Container {
         }
 
         this.idleAnimation.kill();
-        this.pos = -1;
+        this.pos = 0;
         
         this.wheel.angle = 0;
 
@@ -222,7 +220,7 @@ export class Wheel extends Container {
             ease: Back.easeOut.config(0.2),
             onComplete: () => { 
                 this.game.state.gameState = 'idle';
-                this.pos = -1;
+                this.pos = 0;
             },
             onUpdate: () => {
                 this.click();
@@ -230,23 +228,17 @@ export class Wheel extends Container {
         });
     }
 
-    // TODO: fix this and mach with the handles positions
     private click() { 
         const pos = Math.round(this.wheel.angle % 360 / (360 / 8));
         
-        if (this.pos === pos) {
+        if (pos === 0 || this.pos === pos) {
             return;
         }
         
         this.pos = pos;
 
-        console.log({
-            pos: this.pos,
-            a: Math.round(this.wheel.angle % 360 / (360 / 8))
-        });
-    
         if (sound.find('wheel-click').isPlaying) {
-            return;
+            return;4
         }
 
         sound.play('wheel-click');
