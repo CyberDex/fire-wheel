@@ -7,21 +7,25 @@ import { Fire } from '../components/Fire';
 import { Texture } from '@pixi/core';
 import { TilingSprite } from '@pixi/sprite-tiling';
 import { gameConfig } from '../config/gameConfig';
+import { sound } from '@pixi/sound';
+import { Sprite } from '@pixi/sprite';
+import { Container } from '@pixi/display';
 
 export class GameScreen extends AppScreen {
     public static assetBundles = ['game'];
     private game!: Game;
+    private mutedIcon!: Sprite;
 
     constructor() {
         super('GameScreen');
 
         app.addBG(); 
-
         this.addGame();
-        
         this.addBottomFire();
-
         this.addBackButton();
+        this.addMuteButton();
+
+        this.updateSound();
     }
 
     private addGame() { 
@@ -80,5 +84,55 @@ export class GameScreen extends AppScreen {
                 maxHeight: '20%', // set max height to 20% of the parent height so the layout witt scale down if the screen height is too small to fit it
             },
         });
+    }
+
+    private addMuteButton() {
+        const muteIcon = new Container();
+        muteIcon.addChild(
+            Sprite.from('MusicIcon'),
+            this.mutedIcon = Sprite.from('CloseIcon')
+        );
+
+        this.mutedIcon.scale.set(0.7);
+        this.mutedIcon.x = 10;
+        this.mutedIcon.y = 10;
+
+        this.mutedIcon.tint = 0xFF0000;
+
+        const muteButton = new SmallIconButton(muteIcon, () => { // create a button with a custom icon
+            localStorage.getItem('muted') === 'true' ? localStorage.setItem('muted', 'false') : localStorage.setItem('muted', 'true');
+
+            this.updateSound();
+        }, {
+            x: 3,
+            y: -10
+        });
+        
+        this.addContent({ // add content to the screen layout
+            content: {
+                content: muteButton,
+                styles: {
+                    paddingLeft: muteButton.width / 2 + 20,
+                    paddingTop: muteButton.height / 2 + 20
+                }
+            },
+            styles: { // set styles for the button block
+                position: 'rightTop', // position the button in the bottom right corner of the parent
+                scale: 0.35, // scale button 0.5 times
+                maxWidth: '33%', // set max width to 20% of the parent width so the layout witt scale down if the screen width is too small to fit it
+                maxHeight: '20%', // set max height to 20% of the parent height so the layout witt scale down if the screen height is too small to fit it
+                marginRight: -20,
+            },
+        });
+    }
+
+    private updateSound() { 
+        if (localStorage.getItem('muted') === 'true') {
+            sound.muteAll();
+            this.mutedIcon.visible = true;
+        } else {
+            sound.unmuteAll();
+            this.mutedIcon.visible = false;
+        }
     }
 }

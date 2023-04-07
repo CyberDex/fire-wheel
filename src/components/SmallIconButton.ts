@@ -1,11 +1,13 @@
+import { Container } from "@pixi/display";
 import { sound } from "@pixi/sound";
 import { FancyButton } from "@pixi/ui";
 
 /** Config is applied to a FancyButton, so it can be used without setting a config. */
 export class SmallIconButton extends FancyButton {
     constructor(
-        icon: string, // icon for the button
+        icon: string | Container, // icon for the button
         onclick: () => void, // callback for the button press
+        iconOffset?: { x?: number; y?: number } // offset for the icon
         ) {
         super({ // create the FancyButton component
             defaultView: `SmallButton-disabled`, // this is a key to the texture atlas for default button state view
@@ -13,7 +15,7 @@ export class SmallIconButton extends FancyButton {
             pressedView: `SmallButton-pressed`, // this is a key to the texture atlas for pressed button state view
             disabledView: `SmallButton-disabled`, // this is a key to the texture atlas for disabled button state view
             icon, // this is a key to the texture atlas for icon
-            iconOffset: { // offset for the icon
+            iconOffset: iconOffset ?? { // offset for the icon
                 y: -10, // move icon up
             },
             animations: { // animations config for button states

@@ -90,6 +90,14 @@ export const assetsManifest: ResolverManifest = {
                     name:'HomeIcon', 
                     srcs: 'assets/Icons/HomeIcon.png'
                 },
+                {
+                    name:'MusicIcon', 
+                    srcs: 'assets/Icons/MusicIcon.png'
+                },
+                {
+                    name:'CloseIcon', 
+                    srcs: 'assets/Icons/CloseIcon.png'
+                },
             ],
         }
     ],
