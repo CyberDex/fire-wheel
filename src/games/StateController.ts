@@ -1,7 +1,7 @@
 import { Signal } from "typed-signals";
 import { log } from "../utils/log";
 import { getRandomItem } from "../utils/random";
-import { wheelConfig } from "../config/wheelConfig";
+import { gameConfig } from "../config/gameConfig";
 
 export type StateData = 'balance' | 'result' | 'gameState' | 'cheatResult';
 export type GameState = 'idle' | 'result';
@@ -31,7 +31,7 @@ export class StateController {
     }
 
     private initWeights() { 
-        const { weights, credits } = wheelConfig;
+        const { weights, credits } = gameConfig;
 
         credits.forEach((credit, index) => { 
             for (let i = 0; i < weights[index]; i++) {
@@ -41,6 +41,10 @@ export class StateController {
     }
 
     private set(key: StateData, value: State[StateData]) {
+        if (this.state[key] === value) { 
+            return;
+        }
+        
         log({
             [key]: value
         });

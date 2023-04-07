@@ -1,15 +1,21 @@
 import { Container } from "@pixi/display";
-import { wheelConfig } from "../config/wheelConfig";
+import { gameConfig } from "../config/gameConfig";
 import { Wheel } from "./Wheel";
-import { ResultNumber, State, StateController, StateData } from "./StateController";
+import { GameState, ResultNumber, State, StateController, StateData } from "./StateController";
 import { updateNumber } from "../utils/cuonters";
 import { Text } from "@pixi/text";
 import i18n from "../config/i18n";
 import { Cheats } from "../components/Cheats";
+import { Graphics } from "@pixi/graphics";
+import { FancyButton } from "@pixi/ui";
+import { gsap } from "gsap";
 
 export class Game extends Container {
     private stateController: StateController;
     private balanceText!: Text;
+    private spinButton!: FancyButton;
+    private idleTimeout!: NodeJS.Timeout;
+    private winMessage!: Text;
 
     paused = false;
     activated = false;
@@ -26,11 +32,13 @@ export class Game extends Container {
     }
 
     init(): Game {
-
         this.addWheel();
-
         this.addBalanceText();
+        this.addSpinButton();
         this.addCheats();
+        this.addWinMessage();
+
+        this.addEvents()
 
         return this;
     }
@@ -52,7 +60,7 @@ export class Game extends Container {
         });
 
         title.anchor.set(0.5);
-        title.x = wheelConfig.radius;
+        title.x = gameConfig.radius;
 
         this.balanceText = new Text('', {
             fill: 0xFFFFFF,
@@ -65,8 +73,8 @@ export class Game extends Container {
         });
 
         this.balanceText.anchor.set(0.5);
-        this.balanceText.x = wheelConfig.radius;
-        this.balanceText.y = wheelConfig.balanceTextOffset;
+        this.balanceText.x = gameConfig.radius;
+        this.balanceText.y = gameConfig.balanceTextOffset;
 
         title.y = this.balanceText.y - this.balanceText.height / 2 - title.height / 2;
 
@@ -81,8 +89,129 @@ export class Game extends Container {
         updateNumber(this.balanceText, this.state.balance);        
     }
     
+    private addSpinButton() { 
+        const {
+            size,
+            color,
+            fillColor,
+            offsetX,
+            offsetY,
+            style,
+            borderColor,
+            border,
+            additionalTextStyle
+        } = gameConfig.spinButton;
+                    
+        const spinButton = new Graphics()
+            .beginFill(borderColor)
+            .drawCircle(0, 0, size)
+            .beginFill(color)
+            .drawCircle(0, 0, size - border)
+            .beginFill(fillColor)
+            .drawCircle(0, 0, size * 0.8);
+        
+        const text = new Text(i18n.game.spin, style);
+        text.anchor.set(0.5);
+        text.y = -10;
+        spinButton.addChild(text);
+        
+        const additionalText = new Text(i18n.game.additional, additionalTextStyle);
+        additionalText.anchor.set(0.5, 0);
+        additionalText.y = 10;
+        spinButton.addChild(additionalText);
+
+        const graphicsOffsetX = spinButton.width / 2;
+        const graphicsOffsetY = spinButton.height / 2;
+                        
+        this.spinButton = new FancyButton({
+            defaultView: spinButton,
+            animations: {
+                default: {
+                    props: {
+                        scale: { x: 1, y: 1 },
+                        x: graphicsOffsetX,
+                        y: graphicsOffsetY
+                    },
+                    duration: 100
+                },
+                hover: {
+                    props: {
+                        scale: { x: 1.03, y: 1.03 },
+                        x: graphicsOffsetX,
+                        y: graphicsOffsetY
+                    },
+                    duration: 100
+                },
+                pressed: {
+                    props: {
+                        scale: { x: 0.9, y: 0.9 },
+                        x: graphicsOffsetX,
+                        y: graphicsOffsetY
+                    },
+                    duration: 100
+                }
+            },
+        });
+
+        this.spinButton.x = offsetX;
+        this.spinButton.y = offsetY;
+
+        this.spinButton.onPress.connect(() => { 
+            this.state.gameState = 'result';
+        });
+
+        this.addChild(this.spinButton);
+    }
+
+    private addWinMessage() {
+        const {
+            style,
+            offsetX,
+            offsetY,
+        } = gameConfig.winMessage;
+
+        this.winMessage = new Text(i18n.game.result, style);
+        this.winMessage.anchor.set(0.5);
+        this.winMessage.x = offsetX;
+        this.winMessage.y = offsetY;
+        this.winMessage.alpha = 0;
+
+        this.addChild(this.winMessage);
+    }
+
+    private showWinMessage() {
+        this.winMessage.alpha = 0;
+        this.winMessage.text = i18n.game.result.replace('{X}', this.state.result.toString());
+
+        const {
+            showWinMessageDuration,
+            resultRevealDuration
+        } = gameConfig;
+
+        gsap.killTweensOf(this.winMessage);
+
+        gsap.to(this.winMessage, {
+            duration: showWinMessageDuration, 
+            alpha: 1,
+            width: this.winMessage.width * 1.2,
+            height: this.winMessage.height * 1.2,
+        });
+
+        gsap.to(this.winMessage, {
+            delay: showWinMessageDuration,
+            duration: showWinMessageDuration,
+            width: this.winMessage.width,
+            height: this.winMessage.height,
+        });
+
+        gsap.to(this.winMessage, {
+            alpha: 0,
+            delay: resultRevealDuration + showWinMessageDuration,
+        });
+    }
+    
     private addCheats() { 
-        const cheats = new Cheats(['auto', ...new Set(wheelConfig.credits)], (data) => {
+        const cheats = new Cheats(['auto', ...new Set(gameConfig.credits)], (data) => {
             if (data.val === 'auto') {
                 this.stateController.cheatResult = null;
             }
@@ -90,18 +219,53 @@ export class Game extends Container {
             this.stateController.cheatResult = Number(data.val) as ResultNumber;
         });
 
-        cheats.x = -wheelConfig.radius / 2 - 30;
+        cheats.x = -gameConfig.radius / 2 - 30;
         cheats.y = this.height / 2 - cheats.height / 1.5;
 
         this.addChild(cheats);
     }
 
-    update() { 
-        if (this.paused) {
-            return;
+    private addEvents() { 
+        this.state.onChange.connect((key: StateData, value: State[StateData]) => {
+            if (key !== 'gameState') return;
+
+            switch (value as GameState) {
+                case 'result':
+                    if (this.idleTimeout) {
+                        clearTimeout(this.idleTimeout);
+                    }
+                    
+                    gsap.to(this.spinButton, {
+                        alpha: 0,
+                        onComplete: () => {
+                            this.spinButton.enabled = false;
+                        }
+                    });
+
+                    this.wheel.showResult();
+                    break;
+                case "idle":
+                    this.idleTimeout = setTimeout(() => {
+                        if (this.state.gameState === 'idle') {
+                            this.wheel.idleSpin();
+                        }
+                    }, gameConfig.delayOnResult * 1000);
+
+                    this.spinButton.enabled = true;
+                    gsap.to(this.spinButton, {
+                        alpha: 1,
+                    });
+
+                    this.showWinMessage();
+                    break;                
+            }
+        });
+    }
+
+    startSpin() {
+        if (this.state.gameState === 'idle') {            
+            this.state.gameState = 'result';
         }
     }
     
-    resize(_width: number, _height: number) {
-    }
 }

@@ -1,5 +1,5 @@
 import { Graphics } from "@pixi/graphics";
-import { wheelConfig } from "../config/wheelConfig";
+import { gameConfig } from "../config/gameConfig";
 import { Container } from "@pixi/display";
 import { Fire } from "../components/Fire";
 import { pixiApp } from "../main";
@@ -7,27 +7,19 @@ import { Text } from "@pixi/text";
 import { Back, gsap } from "gsap";
 import { getRandomInRange, getRandomItem } from "../utils/random";
 import { Game } from "./Game";
-import { GameState, ResultNumber, State, StateData } from "./StateController";
-import i18n from "../config/i18n";
-import { FancyButton } from "@pixi/ui";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
     private fire!: Fire;
     private idleAnimation!: gsap.core.Timeline;
-    private idleTimeout!: NodeJS.Timeout;
-    private spinButton!: FancyButton;
-    private winMessage!: Text;
 
     constructor(private game: Game) {
         super();
 
         this.addBase();
         this.addPointer();
-        this.addSpinButton();
-        this.addWinMessage();
+
         this.addFire();
-        this.addEvents();
         this.idleSpin();
     }
 
@@ -37,7 +29,7 @@ export class Wheel extends Container {
             pointerColor,
             pointerSize,
             pointerFillColor
-        } = wheelConfig;
+        } = gameConfig;
 
         const pointer = new Graphics()
             .beginFill(pointerColor)
@@ -76,7 +68,7 @@ export class Wheel extends Container {
             centerColor,
             handlesSize,
             centerFillColor
-        } = wheelConfig;
+        } = gameConfig;
         const sectorsCount = credits.length;
         const angleIncrement = (2 * Math.PI) / sectorsCount;
 
@@ -136,12 +128,8 @@ export class Wheel extends Container {
 
         this.wheel.addChild(center);
         
-        this.wheel.pivot.set(wheelConfig.radius);
-        this.wheel.position.set(wheelConfig.radius);
-
-        pixiApp.ticker.add(() => {
-            this.fire.update();
-        });
+        this.wheel.pivot.set(gameConfig.radius);
+        this.wheel.position.set(gameConfig.radius);
     }
 
     private addHandle(x: number, y: number) { 
@@ -149,7 +137,7 @@ export class Wheel extends Container {
             handlesSize,
             handlesColor,
             handlesFillColor,
-        } = wheelConfig;
+        } = gameConfig;
 
         this.wheel.addChild(
             new Graphics()
@@ -160,115 +148,10 @@ export class Wheel extends Container {
         );
     }
 
-    private addSpinButton() { 
-        const {
-            size,
-            color,
-            fillColor,
-            offsetX,
-            offsetY,
-            style,
-            borderColor,
-            border,
-            additionalTextStyle
-        } = wheelConfig.spinButton;
-                    
-        const spinButton = new Graphics()
-            .beginFill(borderColor)
-            .drawCircle(0, 0, size)
-            .beginFill(color)
-            .drawCircle(0, 0, size - border)
-            .beginFill(fillColor)
-            .drawCircle(0, 0, size * 0.8);
-        
-        const text = new Text(i18n.game.spin, style);
-        text.anchor.set(0.5);
-        text.y = -10;
-        spinButton.addChild(text);
-        
-        const additionalText = new Text(i18n.game.additional, additionalTextStyle);
-        additionalText.anchor.set(0.5, 0);
-        additionalText.y = 10;
-        spinButton.addChild(additionalText);
-
-        const graphicsOffsetX = spinButton.width / 2;
-        const graphicsOffsetY = spinButton.height / 2;
-                        
-        this.spinButton = new FancyButton({
-            defaultView: spinButton,
-            animations: {
-                default: {
-                    props: {
-                        scale: { x: 1, y: 1 },
-                        x: graphicsOffsetX,
-                        y: graphicsOffsetY
-                    },
-                    duration: 100
-                },
-                hover: {
-                    props: {
-                        scale: { x: 1.03, y: 1.03 },
-                        x: graphicsOffsetX,
-                        y: graphicsOffsetY
-                    },
-                    duration: 100
-                },
-                pressed: {
-                    props: {
-                        scale: { x: 0.9, y: 0.9 },
-                        x: graphicsOffsetX,
-                        y: graphicsOffsetY
-                    },
-                    duration: 100
-                }
-            },
-        });
-
-        this.spinButton.x = offsetX;
-        this.spinButton.y = offsetY;
-
-        this.spinButton.onPress.connect(() => { 
-            this.game.state.gameState = 'result';
-        });
-
-        this.addChild(this.spinButton);
-    }
-
-    private addWinMessage() {
-        const {
-            style,
-            offsetX,
-            offsetY,
-        } = wheelConfig.winMessage;
-
-        this.winMessage = new Text(i18n.game.result, style);
-        this.winMessage.anchor.set(0.5);
-        this.winMessage.x = offsetX;
-        this.winMessage.y = offsetY;
-        this.winMessage.alpha = 0;
-
-        this.addChild(this.winMessage);
-    }
-    
-    private showWinMessage() { 
-        this.winMessage.alpha = 0;
-
-        this.winMessage.text = i18n.game.result.replace('{X}', this.game.state.result.toString());
-
-        gsap.to(this.winMessage, {
-            alpha: 1,
-        });
-
-        gsap.to(this.winMessage, {
-            alpha: 0,
-            delay: wheelConfig.resultRevealDuration + 1,
-        });
-    }
-
     private addFire() { 
         let {
             radius,
-        } = wheelConfig;
+        } = gameConfig;
         
         this.fire = new Fire();
 
@@ -280,69 +163,16 @@ export class Wheel extends Container {
                 height: radius * 2,
             }
         });
-    }
 
-    private addEvents() { 
-        this.game.state.onChange.connect((key: StateData, value: State[StateData]) => {
-            if (key !== 'gameState') return;
-
-            switch (value as GameState) {
-                case 'result':
-                    if (this.idleTimeout) {
-                        clearTimeout(this.idleTimeout);
-                    }
-                    
-                    gsap.to(this.spinButton, {
-                        alpha: 0,
-                        onComplete: () => {
-                            this.spinButton.enabled = false;
-                        }
-                    });
-
-                    this.showResult();
-                    break;
-                case "idle":
-                    this.idleTimeout = setTimeout(() => {
-                        if (this.game.state.gameState === 'idle') {
-                            this.idleSpin();
-                        }
-                    }, wheelConfig.delayOnResult * 1000);
-
-                    this.spinButton.enabled = true;
-                    gsap.to(this.spinButton, {
-                        alpha: 1,
-                    });
-
-                    this.showWinMessage();
-                    break;                
-            }
-        });
-    }
-
-    startSpin() {
-        if (this.game.state.gameState === 'idle') {            
-            this.game.state.gameState = 'result';
-        }
-    }
-
-    idleSpin(targetAngle = 360) {
-        this.idleAnimation = gsap.timeline();
-        
-        // speed in degrees per second
-        const duration = 1 / wheelConfig.idleSpeed * targetAngle; // seconds to make 1 rotation
-
-        this.idleAnimation.to(this.wheel, {
-            duration,
-            angle: `+=${targetAngle}`, 
-            ease: 'linear',
-            repeat: -1,
+        pixiApp.ticker.add(() => {
+            this.fire.update();
         });
     }
 
     private get resultAngle() {
-        const { angles } = wheelConfig;
+        const { angles } = gameConfig;
         
-        const result = this.game.state.result as ResultNumber;
+        const result = this.game.state.result;
         const has2zones = typeof angles[result][0] !== 'number';
     
         const resultAngleRange = has2zones
@@ -354,8 +184,22 @@ export class Wheel extends Container {
         return resultAngle;
     }
 
+    idleSpin(targetAngle = 360) {
+        this.idleAnimation = gsap.timeline();
+        
+        // speed in degrees per second
+        const duration = 1 / gameConfig.idleSpeed * targetAngle; // seconds to make 1 rotation
+
+        this.idleAnimation.to(this.wheel, {
+            duration,
+            angle: `+=${targetAngle}`, 
+            ease: 'linear',
+            repeat: -1,
+        });
+    }
+
     showResult() { 
-        const { rotationsForReveal, resultRevealDuration } = wheelConfig;
+        const { rotationsForReveal, resultRevealDuration } = gameConfig;
 
         const curAngle = this.wheel.angle;
         const rotations = (360 * rotationsForReveal);

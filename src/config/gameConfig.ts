@@ -1,4 +1,4 @@
-export const wheelConfig = {
+export const gameConfig = {
     radius: 250,
     borderSize: 10,
     wheelColor: 0x000000,
@@ -78,12 +78,13 @@ export const wheelConfig = {
     winMessage: {
         style: {
             fill: 0xFFFFFF,
-            fontSize: 60,
+            fontSize: 58,
             fontFamily: 'Days One',
             stroke: 0xff622c,
             strokeThickness: 3,
         },
         offsetX: 250,
         offsetY: 580,
-    }
+    },
+    showWinMessageDuration: 0.2
 }

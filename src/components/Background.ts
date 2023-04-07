@@ -54,8 +54,9 @@ export class Background extends Layout {
             return;
         }
         
-        this.animation.to(this.bgSprite, 0.1, {x:`+=${power}`, yoyo:true, repeat:-1, duration, delay});
-        this.animation.to(this.bgSprite, 0.1, { x: `-=${power}`, yoyo: true, repeat: -1, duration });    }
+        this.animation.to(this.bgSprite, 0.1, { x:`+=${power}`, yoyo:true, repeat:-1, duration, delay});
+        this.animation.to(this.bgSprite, 0.1, { x: `-=${power}`, yoyo: true, repeat: -1, duration });
+    }
 
     stopSwing() {
         this.resetFilter();

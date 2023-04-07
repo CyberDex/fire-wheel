@@ -6,7 +6,8 @@ import { Game } from '../games/Game';
 import { Fire } from '../components/Fire';
 import { Texture } from '@pixi/core';
 import { TilingSprite } from '@pixi/sprite-tiling';
-import { wheelConfig } from '../config/wheelConfig';
+import { gameConfig } from '../config/gameConfig';
+import { pixiApp } from '../main';
 
 export class GameScreen extends AppScreen {
     public static assetBundles = ['game'];
@@ -32,8 +33,8 @@ export class GameScreen extends AppScreen {
             content: this.game,
             styles: {
                 position: 'center',
-                width: wheelConfig.radius * 2,
-                height: wheelConfig.radius * 2,
+                width: gameConfig.radius * 2,
+                height: gameConfig.radius * 2,
                 maxWidth: '60%',
                 maxHeight: '60%',
             }
@@ -47,6 +48,10 @@ export class GameScreen extends AppScreen {
         base.height = 50;
         
         this.fire = new Fire(base);
+
+        pixiApp.ticker.add(() => {
+            this.fire.update();
+        });
 
         this.addContent({
             content: base,
@@ -81,20 +86,4 @@ export class GameScreen extends AppScreen {
             },
         });
     }
-
-    onUpdate() {
-        this.fire?.update();
-
-        if (this.game?.update) {
-            this.game.update();
-        }
-    }
-
-    override resize(width: number, height: number) {
-        super.resize(width, height);
-        
-        if (this.game?.resize) {
-            this.game.resize(width, height);
-        }
-    };
 }
