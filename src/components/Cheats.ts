@@ -29,6 +29,12 @@ export class Cheats extends Container {
 
         this.addChild(title);
 
+        elements.sort((a, b) => {
+            if(a > b) return 1;
+            if(a < b) return -1;
+            return 0;
+        });
+
         elements.forEach((text) => {
             items.push(
                 new CheckBox({
