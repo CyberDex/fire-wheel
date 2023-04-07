@@ -6,14 +6,13 @@ import { Text } from "@pixi/text";
 import { Back, gsap } from "gsap";
 import { getRandomInRange, getRandomItem } from "../utils/random";
 import { Game } from "./Game";
-import { Sound, sound } from "@pixi/sound";
+import { IMediaInstance, Sound, sound } from "@pixi/sound";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
     private fire!: Fire;
     private idleAnimation!: gsap.core.Timeline;
     private pos = -1;
-    private sound: Sound;
 
     constructor(private game: Game) {
         super();
@@ -245,8 +244,11 @@ export class Wheel extends Container {
             pos: this.pos,
             a: Math.round(this.wheel.angle % 360 / (360 / 8))
         });
-        
+    
+        if (sound.find('wheel-click').isPlaying) {
+            return;
+        }
 
-        this.sound = sound.play('wheel-click');
+        sound.play('wheel-click');
     }
 }
