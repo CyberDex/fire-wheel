@@ -2,7 +2,7 @@ import { AppScreen } from '../components/AppScreen';
 import { SmallIconButton } from '../components/SmallIconButton';
 import { app } from '../App';
 import { TitleScreen } from './TitleScreen';
-import { Game } from '../games/Game';
+import { Game } from '../game/Game';
 import { Fire } from '../components/Fire';
 import { Texture } from '@pixi/core';
 import { TilingSprite } from '@pixi/sprite-tiling';
