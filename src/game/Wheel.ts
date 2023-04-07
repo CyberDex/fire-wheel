@@ -10,6 +10,7 @@ import { sound } from "@pixi/sound";
 import { FederatedPointerEvent } from "@pixi/events";
 import { DragObject } from "@pixi/ui/lib/utils/HelpTypes";
 import { Sprite } from "@pixi/sprite";
+import { log } from "../utils/log";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
@@ -19,12 +20,13 @@ export class Wheel extends Container {
     private dragging = false;
     private startDragAngle = 0;
     private hand!: Sprite;
+    private pointer!: Graphics;
 
     constructor(private game: Game) {
         super();
 
-        this.addBase();
         this.addPointer();
+        this.addBase();
 
         this.addFire();
         
@@ -42,7 +44,7 @@ export class Wheel extends Container {
             pointerFillColor
         } = gameConfig;
 
-        const pointer = new Graphics()
+        this.pointer = new Graphics()
             .beginFill(pointerColor)
             .moveTo(0, 0)
             .lineTo(pointerSize, 0)
@@ -52,17 +54,35 @@ export class Wheel extends Container {
         const fillPointerSize = pointerSize * 0.8;
         const fillOffset = pointerSize - fillPointerSize;
         
-        pointer
+        this.pointer
             .beginFill(pointerFillColor)
             .moveTo(fillOffset, fillOffset / 2)
             .lineTo(fillPointerSize, fillOffset / 2)
             .lineTo((fillPointerSize + fillOffset) / 2, fillPointerSize)
             .closePath();
         
-        pointer.x = radius - pointerSize / 2;
-        pointer.y = -pointerSize * 0.8;
+        this.pointer.pivot.set(pointerSize / 2, pointerSize / 2);
         
-        this.addChild(pointer);
+        this.pointer.x = radius;
+        this.pointer.y = -pointerSize * 0.5;
+        
+        this.addChild(this.pointer);
+    }
+
+    private movePointer(angle: number = 30) { 
+        if (gsap.isTweening(this.pointer)) { 
+            return;
+        }
+
+        const duration = this.game.state.gameState === 'idle' ? 0.1 : 0.02;
+
+        gsap.to(this.pointer, {
+            angle: `-=${angle}`,
+            duration,
+            repeat: 1,
+            yoyo: true,
+            ease: 'linear'
+        });
     }
 
     private addBase() { 
@@ -267,6 +287,8 @@ export class Wheel extends Container {
         }
 
         sound.play('wheel-click');
+        
+        this.movePointer();
     }
 
     stop() {
@@ -307,6 +329,8 @@ export class Wheel extends Container {
 
         const angle = Math.atan2(y - gameConfig.radius, x - gameConfig.radius);
         this.wheel.angle = angle * 180 / Math.PI;
+
+        this.click();
     }
 
     // TODO: improve this
