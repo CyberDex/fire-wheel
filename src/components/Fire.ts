@@ -89,9 +89,9 @@ export class Fire {
     }
 
     private updateQuality() {
-        log({
-            quality: this.quality,
-        });
+        // log({
+        //     quality: this.quality,
+        // });
 
         this.fireEmitter.frequency = getQualityData(this.quality, this.type).frequency;
         this.fireEmitter.maxParticles = getQualityData(this.quality, this.type).maxParticles;

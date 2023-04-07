@@ -14,8 +14,12 @@ import { Slider } from "@pixi/ui";
 export class Wheel extends Container {
     private wheel!: Graphics;
     private fire!: Fire;
-    private idleAnimation: gsap.core.Timeline;
+    private idleAnimationSlow: gsap.core.Timeline;
     private resultAnimation: gsap.core.Timeline;
+    private startSpinAngle = 0;
+    private spinsMadeBeforeResult = 0;
+    private startAngle = 0;
+    private idleTimeout!: NodeJS.Timeout;
 
     constructor(private game: Game) {
         super();
@@ -25,10 +29,14 @@ export class Wheel extends Container {
         // this.addArm();
         this.addFire();
 
-        this.idleAnimation = gsap.timeline();
         this.resultAnimation = gsap.timeline();
 
         this.addEvents();
+
+        this.startAngle = 0; //getRandomInRange(0, 360);
+        this.wheel.angle = this.startAngle;
+
+        this.idleSpinSlow();
     }
 
     private addPointer() {
@@ -235,13 +243,22 @@ export class Wheel extends Container {
 
             switch (value as GameState) {
                 case 'spin':
-                    this.idleSpin();
+                    if (this.idleTimeout) {
+                        clearTimeout( this.idleTimeout)
+                    }
+
+                    this.idleSpinFast();
+                    this.startSpinAngle = this.wheel.angle;
                     break;
                 case 'result':
-                    this.showResult();
+                    // do nothing, this is handled in idleSpinFast
                     break;
                 case "idle":
-                    // maybe unblock spin button here
+                    this.idleTimeout = setTimeout(() => {
+                        if (this.game.state.gameState === 'idle') {
+                            this.idleSpinSlow();
+                        }
+                    }, wheelConfig.delayOnResult * 1000);
                     break;                
             }
         });
@@ -253,29 +270,88 @@ export class Wheel extends Container {
         }
     }
 
-    idleSpin() {
-        if (this.idleAnimation.paused()) {
-            this.idleAnimation.resume();
-            return;
-        }
+    idleSpinSlow(targetAngle = 360) {
+        log('idleSpinSlow');
+        this.idleAnimationSlow = gsap.timeline();
+        
+        // speed in degrees per second
+        const duration = 1 / wheelConfig.idleSpeedSlow * targetAngle; // seconds to make 1 rotation
 
-        const { idleSpeed } = wheelConfig;
-
-        this.idleAnimation.to(this.wheel, {
-            idleSpeed,
-            angle: `+=720`,
+        this.idleAnimationSlow.to(this.wheel, {
+            duration,
+            angle: `+=${targetAngle}`, 
+            ease: 'linear',
             repeat: -1,
-            ease: 'linear'
+        });
+    }
+
+    idleSpinFast(targetAngle = 360) {
+        this.spinsMadeBeforeResult++;
+        this.idleAnimationSlow?.kill();
+        
+        // speed in degrees per second
+        const duration = 1 / wheelConfig.idleSpeedFast * targetAngle; // seconds to make 1 rotation
+
+        const animation = gsap.to(this.wheel, {
+            duration,
+            angle: `+=${targetAngle}`, 
+            ease: 'linear',
+            onComplete: () => {
+                const { gameState } = this.game.state;
+                if (gameState === 'spin') {
+                    this.idleSpinFast();
+                } else if (gameState === 'result') {
+                    animation.kill();
+                    this.wheel.angle = this.startSpinAngle;
+                    this.showResult();
+                }
+            }
         });
     }
 
     showResult() { 
-        const {
-            rotationsForReveal,
-            angles,
-            idleSpeed,
-        } = wheelConfig;
-                
+        // const {
+        //     rotationsForReveal,
+        //     idleSpeedFast,
+        //     credits
+        // } = wheelConfig;
+
+        const curAngle0 = this.wheel.angle - this.startAngle - this.startSpinAngle;
+
+        const curAngle = this.wheel.angle;
+        let resultAngle = this.resultAngle;
+
+        if (resultAngle < curAngle) { 
+            resultAngle += 360;
+        }
+
+        // const resultAngle =
+        //     this.wheel.angle > this.resultAngle - (360 / credits.length)
+        //         ? this.resultAngle + 360
+        //         : this.resultAngle;
+
+        log({
+            curAngle0,
+            result: this.game.state.result,
+            curAngle,
+            resultAngle
+        })
+        
+        // const resultAngleSpeedModificator = this.resultAngle / 360;
+
+        this.resultAnimation.to(this.wheel, {
+            duration: 1,//rotationsForReveal + (idleSpeedFast * resultAngleSpeedModificator),
+            angle: resultAngle,
+            ease: Back.easeOut.config(0.1),
+            onComplete: () => { 
+                this.game.state.gameState = 'idle';
+            }
+        });
+    }
+
+    private get resultAngle() { 
+        const { angles } = wheelConfig;
+        
         const result = this.game.state.result as ResultNumber;
 
         let resultAngleRange: [number, number] = [0, 0];
@@ -291,28 +367,7 @@ export class Wheel extends Container {
         const resultAngleTo = resultAngleRange[1];
 
         const resultAngle = getRandomInRange(resultAngleFrom, resultAngleTo);
-        const targetAngle = resultAngle + (360 * rotationsForReveal);
-
-        const resultAngleSpeedModificator = resultAngle / 360;
-
-        log({
-            result,
-            resultAngleFrom,
-            resultAngleTo,
-            rotationsForReveal,
-            targetAngle,
-            resultAngleSpeedModificator
-        });
-
-        this.idleAnimation.pause();
-
-        this.resultAnimation.to(this.wheel, {
-            duration: rotationsForReveal + (idleSpeed * resultAngleSpeedModificator),
-            angle: targetAngle,
-            ease: Back.easeOut.config(0.1),
-            onComplete: () => { 
-                this.game.state.gameState = 'idle';
-            }
-        });
+        
+        return resultAngle;
     }
 }

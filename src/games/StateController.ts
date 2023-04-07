@@ -27,7 +27,7 @@ export class StateController {
 
     private set(key: StateData, value: State[StateData]) {
         log({
-            sate: `${key} => ${value}`
+            [key]: value
         });
 
         this.state[key] = value;

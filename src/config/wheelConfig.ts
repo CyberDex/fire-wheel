@@ -48,7 +48,8 @@ export const wheelConfig = {
     pointerColor: 0xFFFFFF,
     pointerFillColor: 0x000000,
     pointerSize: 50,
-    idleSpeed: 1,
+    idleSpeedFast: 180 * 2, // degrees per second
+    idleSpeedSlow: 90, // degrees per second
     rotationsForReveal: 5,
     arm: {
         meshColor: '#a5e34d',
@@ -66,4 +67,5 @@ export const wheelConfig = {
         showFill: false,
     },
     balanceTextOffset: -80,
+    delayOnResult: 5
 }
