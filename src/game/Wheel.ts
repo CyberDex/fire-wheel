@@ -10,7 +10,6 @@ import { sound } from "@pixi/sound";
 import { FederatedPointerEvent } from "@pixi/events";
 import { DragObject } from "@pixi/ui/lib/utils/HelpTypes";
 import { Sprite } from "@pixi/sprite";
-import { log } from "../utils/log";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
