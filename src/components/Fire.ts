@@ -3,7 +3,6 @@ import { pixiApp } from "../main"
 import { Emitter } from '@pixi/particle-emitter';
 import { app } from "../App";
 import { Container } from "@pixi/display";
-import { log } from "../utils/log";
 
 export class Fire {
     private fireEmitter!: Emitter;

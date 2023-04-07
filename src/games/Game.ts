@@ -6,7 +6,6 @@ import { updateNumber } from "../utils/cuonters";
 import { Text } from "@pixi/text";
 import i18n from "../config/i18n";
 import { Cheats } from "../components/Cheats";
-import { log } from "../utils/log";
 
 export class Game extends Container {
     private stateController: StateController;

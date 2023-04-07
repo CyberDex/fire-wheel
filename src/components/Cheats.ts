@@ -7,7 +7,6 @@ export class Cheats extends Container {
     constructor(elements: (number | string)[], onChange: (data: { id: number; val: string }) => void) {
         super();
     
-        const textColor = 0xff622c;
         const bgColor = 0xff622c;
         const fillColor = 0xFFFFFF;
         const width = 50;
