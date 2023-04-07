@@ -3,9 +3,12 @@ export function getRandomItem(array: any[]): any {
 }
 
 export function getRandomInRange(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min) + min)
+    const fixMin = Math.min(min, max);
+    const fixMax = Math.max(min, max);
+
+    return Math.floor(Math.random() * (fixMax - fixMin) + fixMin)
 }
 
 export function getRandomBoolean(): boolean {
     return Math.random() >= 0.5;
-}
+} 

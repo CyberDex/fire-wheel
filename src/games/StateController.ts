@@ -3,7 +3,7 @@ import { log } from "../utils/log";
 import { getRandomItem } from "../utils/random";
 import { wheelConfig } from "../config/wheelConfig";
 
-export type StateData = 'balance' | 'result' | 'gameState' | 'bet' | 'cheatResult';
+export type StateData = 'balance' | 'result' | 'gameState' | 'cheatResult';
 export type GameState = 'idle' | 'result';
 export type ResultNumber = 200 | 400 | 1000 | 2000 | 5000;
 
@@ -22,7 +22,6 @@ export class StateController {
             balance: 1000,
             result: 0,
             gameState: 'idle',
-            bet: 10,
             cheatResult: 0,
         };
 
@@ -55,12 +54,10 @@ export class StateController {
     }
 
     set gameState(value: GameState) {
-        if (value === 'result') {
-            this.result = getRandomItem(this.weights);
-        }
-
-        if (value === 'result' && this.cheatResult !== 0) {
+        if (value === 'result' && !!this.cheatResult) {
             this.result = Number(this.state.cheatResult) as ResultNumber;
+        } else if (value === 'result') {
+            this.result = getRandomItem(this.weights);
         }
 
         if (value === 'idle') {
@@ -86,19 +83,11 @@ export class StateController {
         this.set('balance', value);
     }
 
-    set bet(value: number) {
-        this.set('bet', value);
-    }
-
-    get bet(): number {
-        return this.state.bet;
-    }
-
-    set cheatResult(value: ResultNumber | 0) {
+    set cheatResult(value: ResultNumber | null) {
         this.set('cheatResult', value);
     }
 
-    get cheatResult(): ResultNumber | 0 {
+    get cheatResult(): ResultNumber | null {
         return this.state.cheatResult;
     }
 }

@@ -5,7 +5,7 @@ import { Fire } from "../components/Fire";
 import { pixiApp } from "../main";
 import { Text } from "@pixi/text";
 import { Back, gsap } from "gsap";
-import { getRandomInRange } from "../utils/random";
+import { getRandomInRange, getRandomItem } from "../utils/random";
 import { Game } from "./Game";
 import { log } from "../utils/log";
 import { GameState, ResultNumber, State, StateData } from "./StateController";
@@ -207,7 +207,6 @@ export class Wheel extends Container {
     }
 
     idleSpin(targetAngle = 360) {
-        log('idleSpinSlow');
         this.idleAnimation = gsap.timeline();
         
         // speed in degrees per second
@@ -221,48 +220,43 @@ export class Wheel extends Container {
         });
     }
 
+    private get resultAngle() {
+        const { angles } = wheelConfig;
+        
+        const result = this.game.state.result as ResultNumber;
+        const has2zones = typeof angles[result][0] !== 'number';
+    
+        const resultAngleRange = has2zones
+            ? getRandomItem(angles[result])
+            : angles[result];
+
+        const resultAngle = getRandomInRange(resultAngleRange[0], resultAngleRange[1]);
+        
+        return resultAngle;
+    }
+
     showResult() { 
-        const { rotationsForReveal, spinSpeed } = wheelConfig;
+        const { rotationsForReveal, resultRevealDuration } = wheelConfig;
 
         const curAngle = this.wheel.angle;
-        let resultAngle = this.resultAngle + (360 * rotationsForReveal);
+        const rotations = (360 * rotationsForReveal);
+        let resultAngle = this.resultAngle + rotations;
 
-        if (resultAngle < curAngle) { 
-            resultAngle += 360;
+        if (curAngle < resultAngle - 360) { 
+            resultAngle += rotations;
         }
 
         this.idleAnimation.kill();
-        const duration = 1 / spinSpeed * resultAngle; // seconds to make 1 rotation
+        
+        this.wheel.angle = 0;
 
         gsap.to(this.wheel, {
-            duration: duration,
+            duration: resultRevealDuration,
             angle: resultAngle,
             ease: Back.easeOut.config(0.2),
             onComplete: () => { 
                 this.game.state.gameState = 'idle';
             }
         });
-    }
-
-    private get resultAngle() { 
-        const { angles } = wheelConfig;
-        
-        const result = this.game.state.result as ResultNumber;
-
-        let resultAngleRange: [number, number] = [0, 0];
-
-        if (Array.isArray(angles[result][0])) { 
-            const randomOf2 = getRandomInRange(0, 1);
-            resultAngleRange = angles[result][randomOf2] as [number, number];
-        } else {
-            resultAngleRange = angles[result][0] as [number, number];
-        }
-
-        const resultAngleFrom = resultAngleRange[0];
-        const resultAngleTo = resultAngleRange[1];
-
-        const resultAngle = getRandomInRange(resultAngleFrom, resultAngleTo);
-        
-        return resultAngle;
     }
 }

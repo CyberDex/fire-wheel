@@ -1,7 +1,7 @@
 import { Container } from "@pixi/display";
 import { wheelConfig } from "../config/wheelConfig";
 import { Wheel } from "./Wheel";
-import { State, StateController, StateData } from "./StateController";
+import { ResultNumber, State, StateController, StateData } from "./StateController";
 import { updateNumber } from "../utils/cuonters";
 import { Text } from "@pixi/text";
 import i18n from "../config/i18n";
@@ -85,10 +85,10 @@ export class Game extends Container {
     private addCheats() { 
         const cheats = new Cheats(['auto', ...new Set(wheelConfig.credits)], (data) => {
             if (data.val === 'auto') {
-                this.stateController.cheatResult = 0;
+                this.stateController.cheatResult = null;
             }
 
-            this.stateController.cheatResult = data.val as any;
+            this.stateController.cheatResult = Number(data.val) as ResultNumber;
         });
 
         cheats.x = -wheelConfig.radius / 2 - 30;

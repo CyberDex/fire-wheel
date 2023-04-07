@@ -67,5 +67,6 @@ export const wheelConfig = {
         showFill: false,
     },
     balanceTextOffset: -80,
-    delayOnResult: 5
+    delayOnResult: 5,
+    resultRevealDuration: 4,
 }
