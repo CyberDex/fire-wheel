@@ -48,9 +48,9 @@ export const wheelConfig = {
     pointerColor: 0xFFFFFF,
     pointerFillColor: 0x000000,
     pointerSize: 50,
-    idleSpeedFast: 180 * 2, // degrees per second
-    idleSpeedSlow: 90, // degrees per second
-    rotationsForReveal: 5,
+    idleSpeed: 15, // degrees per second
+    spinSpeed: 180, // degrees per second
+    rotationsForReveal: 4,
     arm: {
         meshColor: '#a5e34d',
         borderColor: '#FFFFFF',

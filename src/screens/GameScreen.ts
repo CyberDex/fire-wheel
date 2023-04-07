@@ -34,9 +34,9 @@ export class GameScreen extends AppScreen {
                 position: 'center',
                 width: wheelConfig.radius * 2,
                 height: wheelConfig.radius * 2,
-                maxWidth: '80%',
+                maxWidth: '60%',
                 maxHeight: '80%',
-                marginTop: 50
+                marginTop: 50,
             }
         });
     }

@@ -1,16 +1,14 @@
 import { Container } from "@pixi/display";
 import { wheelConfig } from "../config/wheelConfig";
-import { log } from "../utils/log";
 import { Wheel } from "./Wheel";
-import { GameState, State, StateController, StateData } from "./StateController";
-import { getRandomInRange, getRandomItem } from "../utils/random";
+import { State, StateController, StateData } from "./StateController";
 import { updateNumber } from "../utils/cuonters";
 import { Text } from "@pixi/text";
 import i18n from "../config/i18n";
-
+import { Cheats } from "../components/Cheats";
+import { log } from "../utils/log";
 
 export class Game extends Container {
-    private weights: number[] = [];
     private stateController: StateController;
     private balanceText!: Text;
 
@@ -29,26 +27,13 @@ export class Game extends Container {
     }
 
     init(): Game {
-        this.initWeights();
 
         this.addWheel();
 
         this.addBalanceText();
-
-        this.addEvents();
+        this.addCheats();
 
         return this;
-    }
-
-    private initWeights() { 
-        const { weights, credits } = wheelConfig;
-
-        credits.forEach((credit, index) => { 
-            for (let i = 0; i < weights[index]; i++) {
-                this.weights.push(credit);
-            }
-        });
-        
     }
 
     private addWheel() { 
@@ -96,32 +81,22 @@ export class Game extends Container {
         
         updateNumber(this.balanceText, this.state.balance);        
     }
-
-    private addEvents() { 
-        this.state.onChange.connect((key: StateData, value: State[StateData]) => {
-
-            
-
-            if (key !== 'gameState') return;
-
-            switch (value as GameState) {
-                case 'spin':
-                    const serverResponseTime = getRandomInRange(1000, 3000);
-                
-                    setTimeout(() => { 
-                        this.state.result = getRandomItem(this.weights);
-                    }, serverResponseTime)
-                    break;
-                case 'result':
-                    // show win animation
-                    break;
-                case "idle":
-                    // maybe unblock spin button here
-                    break;                
-            }
-        });
-    }
     
+    private addCheats() { 
+        const cheats = new Cheats(['auto', ...new Set(wheelConfig.credits)], (data) => {
+            if (data.val === 'auto') {
+                this.stateController.cheatResult = 0;
+            }
+
+            this.stateController.cheatResult = data.val as any;
+        });
+
+        cheats.x = -wheelConfig.radius / 2 - 30;
+        cheats.y = this.height / 2 - cheats.height / 1.5;
+
+        this.addChild(cheats);
+    }
+
     update() { 
         if (this.paused) {
             return;

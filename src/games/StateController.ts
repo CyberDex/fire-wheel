@@ -1,8 +1,10 @@
 import { Signal } from "typed-signals";
 import { log } from "../utils/log";
+import { getRandomItem } from "../utils/random";
+import { wheelConfig } from "../config/wheelConfig";
 
-export type StateData = 'balance' | 'result' | 'gameState' | 'bet';
-export type GameState = 'idle' | 'spin' | 'result';
+export type StateData = 'balance' | 'result' | 'gameState' | 'bet' | 'cheatResult';
+export type GameState = 'idle' | 'result';
 export type ResultNumber = 200 | 400 | 1000 | 2000 | 5000;
 
 export type State = {
@@ -11,6 +13,7 @@ export type State = {
 
 export class StateController {
     private state: State;
+    private weights: number[] = [];
     
     onChange: Signal<(key: StateData, value: State[StateData]) => void>;
 
@@ -20,9 +23,22 @@ export class StateController {
             result: 0,
             gameState: 'idle',
             bet: 10,
+            cheatResult: 0,
         };
+
+        this.initWeights();
         
         this.onChange = new Signal();
+    }
+
+    private initWeights() { 
+        const { weights, credits } = wheelConfig;
+
+        credits.forEach((credit, index) => { 
+            for (let i = 0; i < weights[index]; i++) {
+                this.weights.push(credit);
+            }
+        });
     }
 
     private set(key: StateData, value: State[StateData]) {
@@ -34,16 +50,32 @@ export class StateController {
         this.onChange.emit(key, value);
     }
     
+    get gameState(): GameState {
+        return this.state.gameState;
+    }
+
+    set gameState(value: GameState) {
+        if (value === 'result') {
+            this.result = getRandomItem(this.weights);
+        }
+
+        if (value === 'result' && this.cheatResult !== 0) {
+            this.result = Number(this.state.cheatResult) as ResultNumber;
+        }
+
+        if (value === 'idle') {
+            this.balance += this.result;
+        }
+
+        this.set('gameState', value);
+    }
+    
     get result(): ResultNumber { 
         return this.state.result;
     }
 
     set result(value: ResultNumber) {
         this.set('result', value);
-
-        if (value > 0) { 
-            this.gameState = 'result';
-        }
     }
 
     get balance(): number {
@@ -54,27 +86,19 @@ export class StateController {
         this.set('balance', value);
     }
 
-    get gameState(): GameState {
-        return this.state.gameState;
-    }
-
-    set gameState(value: GameState) {
-        this.set('gameState', value);
-
-        if (value === 'spin') {
-            this.balance -= this.bet;
-        }
-
-        if (value === 'idle') {
-            this.balance += this.result;
-        }
-    }
-    
     set bet(value: number) {
         this.set('bet', value);
     }
 
     get bet(): number {
         return this.state.bet;
+    }
+
+    set cheatResult(value: ResultNumber | 0) {
+        this.set('cheatResult', value);
+    }
+
+    get cheatResult(): ResultNumber | 0 {
+        return this.state.cheatResult;
     }
 }
