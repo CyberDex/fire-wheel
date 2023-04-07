@@ -46,7 +46,7 @@ export class GameScreen extends AppScreen {
     private addBottomFire() { 
         const base = new TilingSprite(Texture.EMPTY);
         
-        base.width = 1920;
+        base.width = 2000;
         base.height = 50;
         
         new Fire(base);

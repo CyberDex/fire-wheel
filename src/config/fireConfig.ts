@@ -125,7 +125,7 @@ export const fireBehaviors = (width: number, height: number, shape: Shape) => {
                 "minSpeed": 50,
                 "maxSpeed": 50,
                 "minStart": 250,
-                "maxStart": 290
+                "maxStart": 280
             }
         },
         {
