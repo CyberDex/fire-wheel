@@ -1,3 +1,4 @@
+import { sound } from "@pixi/sound";
 import { FancyButton } from "@pixi/ui";
 
 /** Config is applied to a FancyButton, so it can be used without setting a config. */
@@ -33,8 +34,11 @@ export class SmallIconButton extends FancyButton {
             }
         });
 
-        this.onPress.connect(onclick); // connect button press event to the provided callback
-        
+        this.onPress.connect(() => {
+            onclick();
+            sound.play('button');
+        }); // connect button press event to the provided callback
+
         this.anchor.set(0.5); // set button anchor to the center, this is needed for the button to scale correctly when animated
     }
 };

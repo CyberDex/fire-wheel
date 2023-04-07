@@ -62,6 +62,7 @@ export class GameScreen extends AppScreen {
         const button = new SmallIconButton('HomeIcon', () => { // create a button with a custom icon
             app.bg.stopSwing();
             app.showScreen(TitleScreen); 
+            this.game.stop();
         });
 
         this.addContent({ // add content to the screen layout

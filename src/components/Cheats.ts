@@ -1,5 +1,6 @@
 import { Container } from "@pixi/display";
 import { Graphics } from "@pixi/graphics";
+import { sound } from "@pixi/sound";
 import { Text } from "@pixi/text";
 import { CheckBox, RadioGroup } from "@pixi/ui";
 
@@ -75,9 +76,10 @@ export class Cheats extends Container {
             elementsMargin: 10,
         });
 
-        radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) =>
-            onChange({ id: selectedItemID, val: selectedVal }),
-        );
+        radioGroup.onChange.connect((selectedItemID: number, selectedVal: string) => {
+            sound.play('button');
+            onChange({ id: selectedItemID, val: selectedVal });
+        });
 
         this.addChild(radioGroup.innerView);
     }

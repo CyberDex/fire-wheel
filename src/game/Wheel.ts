@@ -243,4 +243,8 @@ export class Wheel extends Container {
 
         sound.play('wheel-click');
     }
+
+    stop() {
+        gsap.killTweensOf(this.wheel);
+    }
 }

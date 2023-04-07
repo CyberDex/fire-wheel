@@ -23,6 +23,10 @@ export const assetsManifest: ResolverManifest = {
                     srcs: 'assets/sounds/fire-storm.mp3',
                 },
                 {
+                    name: 'button',
+                    srcs: 'assets/sounds/button.wav',
+                },
+                {
                     name: 'credits-rollup',
                     srcs: 'assets/sounds/credits-rollup.wav',
                 },

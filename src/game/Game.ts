@@ -44,7 +44,7 @@ export class Game extends Container {
         if (!sound.find('fire-storm').isPlaying) {
             sound.play('fire-storm', { loop: true, volume: 0.5 });
         }
-        
+
         return this;
     }
 
@@ -273,6 +273,10 @@ export class Game extends Container {
         if (this.state.gameState === 'idle') {            
             this.state.gameState = 'result';
         }
+    }
+
+    stop() {
+        this.wheel.stop();
     }
     
 }

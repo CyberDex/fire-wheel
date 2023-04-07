@@ -2,6 +2,7 @@ import { Text } from "@pixi/text";
 import { FancyButton } from "@pixi/ui";
 import { Layout } from "@pixi/layout";
 import { colors } from "../config/colors";
+import { sound } from "@pixi/sound";
 
 /** Creates a Layout with button as content and apply styles. */
 export class Button extends Layout {
@@ -41,7 +42,10 @@ export class Button extends Layout {
             }
         });
 
-        button.onPress.connect(onclick); // connect button press event to the provided callback
+        button.onPress.connect(() => {
+            onclick();
+            sound.play('button');
+        }); // connect button press event to the provided callback
 
         button.anchor.set(0.5); // set button anchor to the center, this is needed for the button to scale correctly when animated
 
