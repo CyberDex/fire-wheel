@@ -77,13 +77,13 @@ export const wheelConfig = {
     },
     winMessage: {
         style: {
-            fill: 0x000000,
-            fontSize: 72,
+            fill: 0xFFFFFF,
+            fontSize: 60,
             fontFamily: 'Days One',
             stroke: 0xff622c,
             strokeThickness: 3,
         },
         offsetX: 250,
-        offsetY: 550,
+        offsetY: 580,
     }
 }

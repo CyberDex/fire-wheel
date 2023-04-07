@@ -245,10 +245,26 @@ export class Wheel extends Container {
         this.winMessage.anchor.set(0.5);
         this.winMessage.x = offsetX;
         this.winMessage.y = offsetY;
+        this.winMessage.alpha = 0;
 
         this.addChild(this.winMessage);
     }
     
+    private showWinMessage() { 
+        this.winMessage.alpha = 0;
+
+        this.winMessage.text = i18n.game.result.replace('{X}', this.game.state.result.toString());
+
+        gsap.to(this.winMessage, {
+            alpha: 1,
+        });
+
+        gsap.to(this.winMessage, {
+            alpha: 0,
+            delay: wheelConfig.resultRevealDuration + 1,
+        });
+    }
+
     private addFire() { 
         let {
             radius,
@@ -296,6 +312,8 @@ export class Wheel extends Container {
                     gsap.to(this.spinButton, {
                         alpha: 1,
                     });
+
+                    this.showWinMessage();
                     break;                
             }
         });
