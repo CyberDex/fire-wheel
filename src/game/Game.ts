@@ -42,7 +42,7 @@ export class Game extends Container {
         this.addEvents()
 
         if (!sound.find('fire-storm').isPlaying) {
-            sound.play('fire-storm', { loop: true, volume: 0.5 });
+            sound.play('fire-storm', { loop: true, volume: 0.3 });
         }
 
         return this;
@@ -188,7 +188,7 @@ export class Game extends Container {
         this.winMessage.alpha = 0;
         this.winMessage.text = i18n.game.result.replace('{X}', this.state.result.toString());
                 
-        sound.play('wheel-landing');
+        sound.play('wheel-landing', { volume: 1.2 });
 
         const {
             showWinMessageDuration,

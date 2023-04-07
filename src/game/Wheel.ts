@@ -103,7 +103,7 @@ export class Wheel extends Container {
             number.x = radius + (innerRadius - numberPadding) * Math.cos(numberAngle + Math.PI / 2);
             number.y = radius + (innerRadius - numberPadding) * Math.sin(numberAngle + Math.PI / 2);
             
-            number.angle = (numberAngle * 180) / Math.PI;
+            number.rotation = numberAngle + Math.PI / 2;
 
             this.addHandle(
                 radius + (innerRadius + handlesSize / 2) * Math.cos(numberAngle + Math.PI / 2),

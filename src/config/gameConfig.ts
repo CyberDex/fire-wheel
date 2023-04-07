@@ -37,7 +37,7 @@ export const gameConfig = {
         2000: [316, 356],
         5000: [136, 176],
     },
-    numberPadding: 40,
+    numberPadding: 70,
     numbersStyle: {
         fill: 0xFFFFFF,
         fontSize: 32,
