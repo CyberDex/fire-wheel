@@ -9,7 +9,7 @@ import { Game } from "./Game";
 import { sound } from "@pixi/sound";
 import { FederatedPointerEvent } from "@pixi/events";
 import { DragObject } from "@pixi/ui/lib/utils/HelpTypes";
-import { log } from "../utils/log";
+import { Sprite } from "@pixi/sprite";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
@@ -18,6 +18,7 @@ export class Wheel extends Container {
     private pos = 0;
     private dragging = false;
     private startDragAngle = 0;
+    private hand!: Sprite;
 
     constructor(private game: Game) {
         super();
@@ -26,9 +27,11 @@ export class Wheel extends Container {
         this.addPointer();
 
         this.addFire();
-        this.idleSpin();
-
+        
+        this.addHand();
         this.activateWheel();
+        
+        this.idleSpin();
     }
 
     private addPointer() {
@@ -173,6 +176,17 @@ export class Wheel extends Container {
         });
     }
 
+    private addHand() {
+        this.hand = Sprite.from('pointer');
+        this.addChild(this.hand);
+        
+        this.hand.anchor.set(0.5);
+        this.hand.x = gameConfig.handPositionX;
+        this.hand.y = gameConfig.handPositionY;
+
+        this.hideHand();
+    }
+
     private get resultAngle() {
         const { angles } = gameConfig;
         
@@ -189,6 +203,7 @@ export class Wheel extends Container {
     }
 
     idleSpin(targetAngle = 360) {
+        this.hideHand();
         this.idleAnimation = gsap.timeline();
         
         // speed in degrees per second
@@ -203,9 +218,12 @@ export class Wheel extends Container {
                 this.click();
             }
         });
+
+        this.showHand();
     }
 
     showResult() { 
+        this.hideHand();
         const { rotationsForReveal, resultRevealDuration } = gameConfig;
 
         const curAngle = this.wheel.angle;
@@ -267,7 +285,10 @@ export class Wheel extends Container {
     }
 
     private startDrag() { 
+        if (this.game.state.gameState !== 'idle') return;
+
         this.stop();
+        this.hideHand();
         this.dragging = true;
         this.startDragAngle = this.wheel.angle;
         // this.game.resetIdleSpin();
@@ -295,16 +316,41 @@ export class Wheel extends Container {
         if (!this.dragging) return;
         this.dragging = false;
 
-        log({
-            startDragAngle: this.startDragAngle,
-            endDragAngle: this.wheel.angle,
-            res: Math.round(Math.abs(this.startDragAngle - this.wheel.angle))
-        });
+        if (Math.abs(this.startDragAngle - this.wheel.angle) < 100) {
+            const manualSpins = parseInt(localStorage.getItem('manualSpins') ?? '0');
 
-        if (Math.abs(this.startDragAngle - this.wheel.angle) < 100) { 
+            localStorage.setItem('manualSpins',(manualSpins + 1).toString());
+
             this.game.startSpin();
         } else {
             this.game.initIdleSpin();
         }
+    }
+
+    showHand() {
+        const manualSpins = parseInt(localStorage.getItem('manualSpins') ?? '0');
+        
+        if (manualSpins > 10) return;
+
+        this.hand.visible = true;
+        this.hand.x = gameConfig.handPositionX;
+        this.hand.y = gameConfig.handPositionY;
+        const {
+            handAnimationOffset,
+            handAnimationSpeed
+        } = gameConfig;
+
+        gsap.to(this.hand, {
+            y: `-=${handAnimationOffset}`,
+            duration: handAnimationSpeed,
+            repeat: -1,
+            yoyo: true,
+            ease: 'linear'
+        });
+    }
+
+    hideHand() {
+        this.hand.visible = false;
+        gsap.killTweensOf(this.hand);
     }
 }

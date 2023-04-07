@@ -86,5 +86,10 @@ export const gameConfig = {
         offsetX: 250,
         offsetY: 580,
     },
-    showWinMessageDuration: 0.2
+    showWinMessageDuration: 0.2,
+    handPositionX: 450,
+    handPositionY: 300,
+    handAnimationOffset: 100,
+    handAnimationSpeed: 0.5,
+
 }

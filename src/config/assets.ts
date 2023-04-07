@@ -98,6 +98,10 @@ export const assetsManifest: ResolverManifest = {
                     name:'CloseIcon', 
                     srcs: 'assets/Icons/CloseIcon.png'
                 },
+                {
+                    name:'pointer', 
+                    srcs: 'assets/pointer.png'
+                },
             ],
         }
     ],
