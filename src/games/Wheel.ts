@@ -9,18 +9,22 @@ import { getRandomInRange, getRandomItem } from "../utils/random";
 import { Game } from "./Game";
 import { log } from "../utils/log";
 import { GameState, ResultNumber, State, StateData } from "./StateController";
+import i18n from "../config/i18n";
+import { FancyButton } from "@pixi/ui";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
     private fire!: Fire;
     private idleAnimation!: gsap.core.Timeline;
     private idleTimeout!: NodeJS.Timeout;
+    private spinButton!: FancyButton;
 
     constructor(private game: Game) {
         super();
 
         this.addBase();
         this.addPointer();
+        this.addSpinButton();
         this.addFire();
         this.addEvents();
         this.idleSpin();
@@ -78,11 +82,6 @@ export class Wheel extends Container {
         this.wheel = new Graphics()
             .beginFill(borderColor)
             .drawCircle(radius, radius, radius);
-
-        this.wheel.interactive = true;
-        this.wheel.cursor = 'pointer';
-        
-        this.wheel.on('pointerdown', () => this.startSpin());
 
         const innerRadius = radius - borderSize;
         
@@ -160,6 +159,73 @@ export class Wheel extends Container {
         );
     }
 
+    private addSpinButton() { 
+        const {
+            size,
+            color,
+            fillColor,
+            offsetX,
+            offsetY,
+            style,
+            borderColor,
+            border
+        } = wheelConfig.spinButton;
+                    
+        const spinButton = new Graphics()
+            .beginFill(borderColor)
+            .drawCircle(0, 0, size)
+            .beginFill(color)
+            .drawCircle(0, 0, size - border)
+            .beginFill(fillColor)
+            .drawCircle(0, 0, size * 0.8);
+        
+        const text = new Text(i18n.game.spin, style);
+        text.anchor.set(0.5);
+        spinButton.addChild(text);
+
+        const graphicsOffsetX = spinButton.width / 2;
+        const graphicsOffsetY = spinButton.height / 2;
+                        
+        this.spinButton = new FancyButton({
+            defaultView: spinButton,
+            animations: {
+                default: {
+                    props: {
+                        scale: { x: 1, y: 1 },
+                        x: graphicsOffsetX,
+                        y: graphicsOffsetY
+                    },
+                    duration: 100
+                },
+                hover: {
+                    props: {
+                        scale: { x: 1.03, y: 1.03 },
+                        x: graphicsOffsetX,
+                        y: graphicsOffsetY
+                    },
+                    duration: 100
+                },
+                pressed: {
+                    props: {
+                        scale: { x: 0.9, y: 0.9 },
+                        x: graphicsOffsetX,
+                        y: graphicsOffsetY
+                    },
+                    duration: 100
+                }
+            },
+        });
+
+        this.spinButton.x = offsetX;
+        this.spinButton.y = offsetY;
+
+        this.spinButton.onPress.connect(() => { 
+            this.game.state.gameState = 'result';
+        });
+
+        this.addChild(this.spinButton);
+    }
+
     private addFire() { 
         let {
             radius,
@@ -186,6 +252,13 @@ export class Wheel extends Container {
                     if (this.idleTimeout) {
                         clearTimeout(this.idleTimeout);
                     }
+                    
+                    gsap.to(this.spinButton, {
+                        alpha: 0,
+                        onComplete: () => {
+                            this.spinButton.enabled = false;
+                        }
+                    });
 
                     this.showResult();
                     break;
@@ -195,6 +268,11 @@ export class Wheel extends Container {
                             this.idleSpin();
                         }
                     }, wheelConfig.delayOnResult * 1000);
+
+                    this.spinButton.enabled = true;
+                    gsap.to(this.spinButton, {
+                        alpha: 1,
+                    });
                     break;                
             }
         });

@@ -51,22 +51,23 @@ export const wheelConfig = {
     idleSpeed: 15, // degrees per second
     spinSpeed: 180, // degrees per second
     rotationsForReveal: 4,
-    arm: {
-        meshColor: '#a5e34d',
-        borderColor: '#FFFFFF',
-        backgroundColor: '#fe6048',
-        min: 0,
-        max: 100,
-        value: 0,
-        width: 450,
-        height: 35,
-        radius: 25,
-        border: 3,
-        handleBorder: 3,
-        showValue: false,
-        showFill: false,
-    },
     balanceTextOffset: -80,
     delayOnResult: 5,
     resultRevealDuration: 4,
+    spinButton: {
+        size: 100,
+        color: 0xff622c,
+        fillColor: 0xFFFFFF,
+        offsetX: 150,
+        offsetY: 150,
+        borderColor: 0xFFFFFF,
+        border: 2,
+        style: {
+            fill: 0x000000,
+            fontSize: 32,
+            fontFamily: 'Days One',
+            stroke: 0xff622c,
+            strokeThickness: 3,
+        },
+    }
 }

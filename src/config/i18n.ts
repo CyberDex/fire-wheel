@@ -13,5 +13,6 @@ export default {
     },
     game: {
         balance: "BALANCE",
+        spin: 'SPIN'
     }
 }
