@@ -7,12 +7,17 @@ import { Back, gsap } from "gsap";
 import { getRandomInRange, getRandomItem } from "../utils/random";
 import { Game } from "./Game";
 import { sound } from "@pixi/sound";
+import { FederatedPointerEvent } from "@pixi/events";
+import { DragObject } from "@pixi/ui/lib/utils/HelpTypes";
+import { log } from "../utils/log";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
     private fire!: Fire;
     private idleAnimation!: gsap.core.Timeline;
-    private pos = -1;
+    private pos = 0;
+    private dragging = false;
+    private startDragAngle = 0;
 
     constructor(private game: Game) {
         super();
@@ -22,6 +27,8 @@ export class Wheel extends Container {
 
         this.addFire();
         this.idleSpin();
+
+        this.activateWheel();
     }
 
     private addPointer() {
@@ -246,5 +253,58 @@ export class Wheel extends Container {
 
     stop() {
         gsap.killTweensOf(this.wheel);
+    }
+
+    activateWheel() {
+        this.wheel.eventMode = 'static';
+        this.wheel.cursor = 'pointer';
+
+        this.wheel
+            .on('pointerdown', this.startDrag, this)
+            .on('globalpointermove', this.drag, this)
+            .on('pointerup', this.endDrag, this)
+            .on('pointerupoutside', this.endDrag, this);
+    }
+
+    private startDrag() { 
+        this.stop();
+        this.dragging = true;
+        this.startDragAngle = this.wheel.angle;
+        // this.game.resetIdleSpin();
+    }
+
+    // TODO: improve this
+    // * it resets on startDrag
+    // * detect current position and not reset
+    private drag(event: FederatedPointerEvent) {
+        if (!this.dragging) {
+            return;
+        }
+
+        const obj = event.currentTarget as DragObject;
+        const { x, y } = obj.parent.worldTransform.applyInverse(event.global);
+
+        const angle = Math.atan2(y - gameConfig.radius, x - gameConfig.radius);
+        this.wheel.angle = angle * 180 / Math.PI;
+    }
+
+    // TODO: improve this
+    // * detect direction of drag
+    // * detect better if drag is long enough
+    private endDrag() { 
+        if (!this.dragging) return;
+        this.dragging = false;
+
+        log({
+            startDragAngle: this.startDragAngle,
+            endDragAngle: this.wheel.angle,
+            res: Math.round(Math.abs(this.startDragAngle - this.wheel.angle))
+        });
+
+        if (Math.abs(this.startDragAngle - this.wheel.angle) < 100) { 
+            this.game.startSpin();
+        } else {
+            this.game.initIdleSpin();
+        }
     }
 }

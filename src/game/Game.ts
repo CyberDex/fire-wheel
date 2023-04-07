@@ -161,9 +161,7 @@ export class Game extends Container {
         this.spinButton.x = offsetX;
         this.spinButton.y = offsetY;
 
-        this.spinButton.onPress.connect(() => { 
-            this.state.gameState = 'result';
-        });
+        this.spinButton.onPress.connect(() => this.startSpin());
 
         this.addChild(this.spinButton);
     }
@@ -238,9 +236,7 @@ export class Game extends Container {
 
             switch (value as GameState) {
                 case 'result':
-                    if (this.idleTimeout) {
-                        clearTimeout(this.idleTimeout);
-                    }
+                    this.resetIdleSpin();
                     
                     gsap.to(this.spinButton, {
                         alpha: 0,
@@ -252,11 +248,7 @@ export class Game extends Container {
                     this.wheel.showResult();
                     break;
                 case "idle":
-                    this.idleTimeout = setTimeout(() => {
-                        if (this.state.gameState === 'idle') {
-                            this.wheel.idleSpin();
-                        }
-                    }, gameConfig.delayOnResult * 1000);
+                    this.initIdleSpin();
 
                     this.spinButton.enabled = true;
                     gsap.to(this.spinButton, {
@@ -273,6 +265,20 @@ export class Game extends Container {
         if (this.state.gameState === 'idle') {            
             this.state.gameState = 'result';
         }
+    }
+
+    resetIdleSpin() { 
+        if (this.idleTimeout) {
+            clearTimeout(this.idleTimeout);
+        }
+    }
+
+    initIdleSpin() {
+        this.idleTimeout = setTimeout(() => {
+            if (this.state.gameState === 'idle') {
+                this.wheel.idleSpin();
+            }
+        }, gameConfig.delayOnResult * 1000);
     }
 
     stop() {
