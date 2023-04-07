@@ -163,10 +163,6 @@ export class Wheel extends Container {
                 height: radius * 2,
             }
         });
-
-        pixiApp.ticker.add(() => {
-            this.fire.update();
-        });
     }
 
     private get resultAngle() {

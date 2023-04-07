@@ -12,7 +12,6 @@ import { pixiApp } from '../main';
 export class GameScreen extends AppScreen {
     public static assetBundles = ['game'];
     private game!: Game;
-    private fire!: Fire;
 
     constructor() {
         super('GameScreen');
@@ -47,11 +46,7 @@ export class GameScreen extends AppScreen {
         base.width = 1920;
         base.height = 50;
         
-        this.fire = new Fire(base);
-
-        pixiApp.ticker.add(() => {
-            this.fire.update();
-        });
+        new Fire(base);
 
         this.addContent({
             content: base,

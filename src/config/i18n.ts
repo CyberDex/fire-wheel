@@ -6,6 +6,7 @@ export default {
         poweredBy: "POWERED BY",
     },
     titleScreen: {
+        title: "FIRE\nWHEEL",
         menu: {
             play: "PLAY",
             repo: "Code on GitHub",

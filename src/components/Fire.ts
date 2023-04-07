@@ -54,6 +54,11 @@ export class Fire {
         this.elapsed = Date.now();
         this.fireEmitter.emit = true;
 
+
+        pixiApp.ticker.add(() => {
+            this.update();
+        });
+
         return this;
     }
 
