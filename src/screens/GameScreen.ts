@@ -7,7 +7,6 @@ import { Fire } from '../components/Fire';
 import { Texture } from '@pixi/core';
 import { TilingSprite } from '@pixi/sprite-tiling';
 import { gameConfig } from '../config/gameConfig';
-import { pixiApp } from '../main';
 
 export class GameScreen extends AppScreen {
     public static assetBundles = ['game'];

@@ -2,7 +2,6 @@ import { Graphics } from "@pixi/graphics";
 import { gameConfig } from "../config/gameConfig";
 import { Container } from "@pixi/display";
 import { Fire } from "../components/Fire";
-import { pixiApp } from "../main";
 import { Text } from "@pixi/text";
 import { Back, gsap } from "gsap";
 import { getRandomInRange, getRandomItem } from "../utils/random";
