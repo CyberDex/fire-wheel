@@ -7,7 +7,6 @@ import { Text } from "@pixi/text";
 import { Back, gsap } from "gsap";
 import { getRandomInRange, getRandomItem } from "../utils/random";
 import { Game } from "./Game";
-import { log } from "../utils/log";
 import { GameState, ResultNumber, State, StateData } from "./StateController";
 import i18n from "../config/i18n";
 import { FancyButton } from "@pixi/ui";
@@ -18,6 +17,7 @@ export class Wheel extends Container {
     private idleAnimation!: gsap.core.Timeline;
     private idleTimeout!: NodeJS.Timeout;
     private spinButton!: FancyButton;
+    private winMessage!: Text;
 
     constructor(private game: Game) {
         super();
@@ -25,6 +25,7 @@ export class Wheel extends Container {
         this.addBase();
         this.addPointer();
         this.addSpinButton();
+        this.addWinMessage();
         this.addFire();
         this.addEvents();
         this.idleSpin();
@@ -168,7 +169,8 @@ export class Wheel extends Container {
             offsetY,
             style,
             borderColor,
-            border
+            border,
+            additionalTextStyle
         } = wheelConfig.spinButton;
                     
         const spinButton = new Graphics()
@@ -181,7 +183,13 @@ export class Wheel extends Container {
         
         const text = new Text(i18n.game.spin, style);
         text.anchor.set(0.5);
+        text.y = -10;
         spinButton.addChild(text);
+        
+        const additionalText = new Text(i18n.game.additional, additionalTextStyle);
+        additionalText.anchor.set(0.5, 0);
+        additionalText.y = 10;
+        spinButton.addChild(additionalText);
 
         const graphicsOffsetX = spinButton.width / 2;
         const graphicsOffsetY = spinButton.height / 2;
@@ -226,6 +234,21 @@ export class Wheel extends Container {
         this.addChild(this.spinButton);
     }
 
+    private addWinMessage() {
+        const {
+            style,
+            offsetX,
+            offsetY,
+        } = wheelConfig.winMessage;
+
+        this.winMessage = new Text(i18n.game.result, style);
+        this.winMessage.anchor.set(0.5);
+        this.winMessage.x = offsetX;
+        this.winMessage.y = offsetY;
+
+        this.addChild(this.winMessage);
+    }
+    
     private addFire() { 
         let {
             radius,

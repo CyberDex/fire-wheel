@@ -69,5 +69,21 @@ export const wheelConfig = {
             stroke: 0xff622c,
             strokeThickness: 3,
         },
+        additionalTextStyle: {
+            fontFamily: 'Days One',
+            fill: 0x000000,
+            fontSize: 10,
+        }
+    },
+    winMessage: {
+        style: {
+            fill: 0x000000,
+            fontSize: 72,
+            fontFamily: 'Days One',
+            stroke: 0xff622c,
+            strokeThickness: 3,
+        },
+        offsetX: 250,
+        offsetY: 550,
     }
 }

@@ -13,6 +13,8 @@ export default {
     },
     game: {
         balance: "BALANCE",
-        spin: 'SPIN'
+        spin: 'SPIN',
+        additional: "PRESS TO SPIN",
+        result: "YOU WON {X} CREDITS!"
     }
 }
