@@ -9,6 +9,7 @@ import { Cheats } from "../components/Cheats";
 import { Graphics } from "@pixi/graphics";
 import { FancyButton } from "@pixi/ui";
 import { gsap } from "gsap";
+import { sound } from "@pixi/sound";
 
 export class Game extends Container {
     private stateController: StateController;
@@ -39,6 +40,8 @@ export class Game extends Container {
         this.addWinMessage();
 
         this.addEvents()
+
+        sound.add('wheel-landing', 'assets/sounds/wheel-landing.wav');
 
         return this;
     }
@@ -182,6 +185,8 @@ export class Game extends Container {
     private showWinMessage() {
         this.winMessage.alpha = 0;
         this.winMessage.text = i18n.game.result.replace('{X}', this.state.result.toString());
+                
+        sound.play('wheel-landing');
 
         const {
             showWinMessageDuration,

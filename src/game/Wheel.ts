@@ -6,11 +6,14 @@ import { Text } from "@pixi/text";
 import { Back, gsap } from "gsap";
 import { getRandomInRange, getRandomItem } from "../utils/random";
 import { Game } from "./Game";
+import { Sound, sound } from "@pixi/sound";
 
 export class Wheel extends Container {
     private wheel!: Graphics;
     private fire!: Fire;
     private idleAnimation!: gsap.core.Timeline;
+    private pos = -1;
+    private sound: Sound;
 
     constructor(private game: Game) {
         super();
@@ -20,6 +23,8 @@ export class Wheel extends Container {
 
         this.addFire();
         this.idleSpin();
+
+        sound.add('wheel-click', 'assets/sounds/wheel-click.wav');
     }
 
     private addPointer() {
@@ -190,6 +195,9 @@ export class Wheel extends Container {
             angle: `+=${targetAngle}`, 
             ease: 'linear',
             repeat: -1,
+            onUpdate: () => {
+                this.click();
+            }
         });
     }
 
@@ -205,6 +213,7 @@ export class Wheel extends Container {
         }
 
         this.idleAnimation.kill();
+        this.pos = -1;
         
         this.wheel.angle = 0;
 
@@ -214,7 +223,30 @@ export class Wheel extends Container {
             ease: Back.easeOut.config(0.2),
             onComplete: () => { 
                 this.game.state.gameState = 'idle';
+                this.pos = -1;
+            },
+            onUpdate: () => {
+                this.click();
             }
         });
+    }
+
+    // TODO: fix this and mach with the handles positions
+    private click() { 
+        const pos = Math.round(this.wheel.angle % 360 / (360 / 8));
+        
+        if (this.pos === pos) {
+            return;
+        }
+        
+        this.pos = pos;
+
+        console.log({
+            pos: this.pos,
+            a: Math.round(this.wheel.angle % 360 / (360 / 8))
+        });
+        
+
+        this.sound = sound.play('wheel-click');
     }
 }

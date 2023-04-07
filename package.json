@@ -25,16 +25,17 @@
         "@pixi/graphics": "^7.2.3",
         "@pixi/layout": "^0.1.7",
         "@pixi/particle-emitter": "^5.0.8",
+        "@pixi/sound": "^5.1.1",
         "@pixi/sprite": "^7.2.3",
         "@pixi/sprite-tiling": "^7.2.3",
         "@pixi/spritesheet": "^7.2.3",
         "@pixi/text": "^7.2.3",
         "@pixi/text-bitmap": "^7.2.3",
         "@pixi/ui": "^0.7.0",
+        "gamestats.js": "^1.0.4",
         "gsap": "^3.11.4",
         "i": "^0.3.7",
-        "typed-signals": "^2.5.0",
-        "gamestats.js": "^1.0.4"
+        "typed-signals": "^2.5.0"
     },
     "devDependencies": {
         "eslint": "^8.32.0",

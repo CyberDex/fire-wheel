@@ -19,16 +19,20 @@ export const assetsManifest: ResolverManifest = {
             name: 'game',
             assets: [
                 {
+                    name: 'fire-storm',
+                    srcs: 'assets/sounds/fire-storm.mp3',
+                },
+                {
                     name: 'credits-rollup',
-                    srcs: 'assets/sounds/credits-rollup.waw',
+                    srcs: 'assets/sounds/credits-rollup.wav',
                 },
                 {
                     name: 'wheel-click',
-                    srcs: 'assets/sounds/wheel-click.waw',
+                    srcs: 'assets/sounds/wheel-click.wav',
                 },
                 {
                     name: 'wheel-landing',
-                    srcs: 'assets/sounds/wheel-landing.waw',
+                    srcs: 'assets/sounds/wheel-landing.wav',
                 },
                 {
                     name: 'bg',
