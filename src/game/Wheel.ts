@@ -308,6 +308,7 @@ export class Wheel extends Container {
     private startDrag() { 
         if (this.game.state.gameState !== 'idle') return;
 
+        this.game.resetIdleSpin();
         this.stop();
         this.hideHand();
         this.dragging = true;
