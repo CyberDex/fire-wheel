@@ -1,6 +1,4 @@
-# Fire Wheel
-
-[Play game](https://cyberdex.github.io/fire-wheel/ "Play game")
+# Fire Wheel. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  [!!! Play link !!!](https://cyberdex.github.io/fire-wheel/ "Play game")
 
 This is an educational project, that implements a basic bonus wheel game, using PixiJS and its libraries PixiUI and PixiLayout. 
 
